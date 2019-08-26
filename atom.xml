@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>郭大东的博客</title>
+  <title>大东的博客</title>
   
   <subtitle>东子的技术博客</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://Daong.com/"/>
-  <updated>2019-08-26T06:50:52.341Z</updated>
+  <updated>2019-08-26T07:03:18.143Z</updated>
   <id>https://Daong.com/</id>
   
   <author>
@@ -17,20 +17,20 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo 建立了郭大东的博客</title>
-    <link href="https://Daong.com/2019/08/25/%E9%83%AD%E5%A4%A7%E4%B8%9Cblog/"/>
-    <id>https://Daong.com/2019/08/25/郭大东blog/</id>
+    <title>耗时1天，搞定hexo。</title>
+    <link href="https://Daong.com/2019/08/25/first_blog/"/>
+    <id>https://Daong.com/2019/08/25/first_blog/</id>
     <published>2019-08-25T03:40:40.000Z</published>
-    <updated>2019-08-26T06:50:52.341Z</updated>
+    <updated>2019-08-26T07:03:18.143Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="耗时1天，搞定了hexo。"><a href="#耗时1天，搞定了hexo。" class="headerlink" title="耗时1天，搞定了hexo。"></a>耗时1天，搞定了hexo。</h3><hr><h4 id="详解hexo的使用到部署。"><a href="#详解hexo的使用到部署。" class="headerlink" title="详解hexo的使用到部署。"></a>详解hexo的使用到部署。</h4><p>第一步：准备基础工具</p><ul><li>安装Git  &nbsp;&nbsp;<a href="https://gitforwindows.org/" target="_blank" rel="noopener">Download git</a></li><li>安装Node.js  &nbsp;&nbsp;<a href="https://nodejs.org/zh-cndownload/" target="_blank" rel="noopener">Download nodejs</a></li><li>安装Hexo &nbsp;&nbsp;<a href="https://hexo.io/zh-cn/docs/setup" target="_blank" rel="noopener">使用hexo</a></li></ul><p>第二部：准备完了基础工作进入正题。</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="详解hexo，快速上手，从使用到部署。"><a href="#详解hexo，快速上手，从使用到部署。" class="headerlink" title="详解hexo，快速上手，从使用到部署。"></a>详解hexo，快速上手，从使用到部署。</h3><hr><p>第一步：准备基础工具</p><ul><li>安装Git：<a href="https://gitforwindows.org/" target="_blank" rel="noopener">Download git</a></li><li>安装Node.js：<a href="https://nodejs.org/zh-cndownload/" target="_blank" rel="noopener">Download nodejs</a></li><li>安装Hexo：<a href="https://hexo.io/zh-cn/docs/setup" target="_blank" rel="noopener">使用hexo</a></li></ul><p>第二部：准备完了基础工作进入正题。</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h3 id=&quot;耗时1天，搞定了hexo。&quot;&gt;&lt;a href=&quot;#耗时1天，搞定了hexo。&quot; class=&quot;headerlink&quot; title=&quot;耗时1天，搞定了hexo。&quot;&gt;&lt;/a&gt;耗时1天，搞定了hexo。&lt;/h3&gt;&lt;hr&gt;
-&lt;h4 id=&quot;详解hexo的使用到部署。&quot;&gt;&lt;
+        &lt;h3 id=&quot;详解hexo，快速上手，从使用到部署。&quot;&gt;&lt;a href=&quot;#详解hexo，快速上手，从使用到部署。&quot; class=&quot;headerlink&quot; title=&quot;详解hexo，快速上手，从使用到部署。&quot;&gt;&lt;/a&gt;详解hexo，快速上手，从使用到部署。&lt;/h3&gt;&lt;hr&gt;
+
       
     
     </summary>
