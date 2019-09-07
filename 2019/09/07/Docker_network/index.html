@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="Docker基础命令"><meta name="keywords" content="Docker, 大东的博客"><link rel="alternate" href="/atom.xml" title="大东的博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=3.11.0">
-<link rel="canonical" href="https://Daong.com/2019/08/31/Docker_basic/">
+<meta name="description" content="Docker基础之网络"><meta name="keywords" content="Docker, 大东的博客"><link rel="alternate" href="/atom.xml" title="大东的博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=3.11.0">
+<link rel="canonical" href="https://Daong.com/2019/09/07/Docker_network/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=3.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>Docker基础命令 - 大东的博客</title>
+    <title>Docker基础之网络 - 大东的博客</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -106,12 +106,12 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">Docker基础命令
+      <h1 class="post-title">Docker基础之网络
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2019-08-31
+          2019-09-07
         </span><span class="post-category">
             <a href="/categories/虚拟化/">虚拟化</a>
             </span>
@@ -121,22 +121,61 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker基础命令总结"><span class="toc-text">Docker基础命令总结</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker网络"><span class="toc-text">Docker网络</span></a></li></ol>
     </div>
-  </div><div class="post-content"><h3 id="Docker基础命令总结"><a href="#Docker基础命令总结" class="headerlink" title="Docker基础命令总结"></a>Docker基础命令总结</h3><p><strong>搜索镜像</strong>: docker search &lt;image名称&gt;<br>可以列出仓库中所有的docker镜像，  isoffic代表是否官方</p>
-<p><strong>查看当前镜像</strong>: docker images / docker image ls             -a 显示所有镜像<br>两者相等。可以列出自己本地所有的镜像。如果查看镜像是否相同，只需要看 IMAGE ID  是否相同  </p>
-<p><strong>下载镜像</strong>: docker pull  Name[:版本号]<br>下载的镜像默认latest 最新版本</p>
-<p><strong>删除镜像</strong>：docker -rmi name[:版本号]  或者  Imageid</p>
-<p><strong>查看镜像/容器详细信息</strong>：docker inspect  镜像名/容器名  （ID也可以）</p>
-<p><strong>查看容器</strong>： docker ps （查看已经启动的） -a （查看所有的容器）</p>
-<p><strong>容器重命名</strong>：docker rename  容器名</p>
-<p><strong>创建并启动程序</strong>：<br>docker run – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           前台模式<br>docker run -d – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           后台模式 </p>
-<p><strong>启动容器参数详解</strong>：-d 参数后台运行 ，-t  容器启动是否进入终端，-i 容器启动是否提供输出功能 (例:如果没有-i,输入ls ,不会打印任何内容) 。建议自己尝试执行docker run -i / docker -t 查看区别。</p>
-<p><strong>容器暂停</strong>：  docker pause / unpause </p>
-<p><strong>重启容器</strong>：docker restart  容器名/容器id   新名字</p>
-<p><strong>查看容器日志</strong>：docker log  容器名</p>
-<p><strong>运行时操作</strong>：<br>docker attach [OPTIONS] CONTAINER    退出时，容器就关闭了  进入主进程<br>docker exec -it  container  命令     退出时 不会关闭容器  进入子进程，子进程不会进入log日志</p>
-<p><strong>停止容器</strong>：docker kill -9 直接杀死容器，docker stop  容器名  -t  2(默认10秒，-t可以设置停止时间)</p>
+  </div><div class="post-content"><h3 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h3><p>容器的网络默认与宿主机，其他容器都是相互隔离的。</p>
+<p><strong>查看docker已经创建的网络对象</strong>： docker network ls </p>
+<p><strong>查看网络详情</strong>：docker network inspect 网络名/id</p>
+<p><strong>创建网络</strong>：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。 </p>
+<p><strong>删除网络</strong>：docker network rm 网络名/id</p>
+<p><strong>使用网络</strong>：docker run  –network host -dti –name 容器名 镜像名</p>
+<p><strong>Docker网络类型</strong>：</p>
+<ol>
+<li><p>bridage</p>
+<ol>
+<li><p>宿主机需要有单独的bridage网卡，如docker 默认创建的docker0</p>
+</li>
+<li><p>外部无法直接访问容器，需要建立端口映射</p>
+</li>
+<li><p>每创建一个bridage网络，都会自动在宿主机上创建一个veth的网络。</p>
+</li>
+<li><p>每一个容器都有单独的ip。</p>
+</li>
+<li><p>容器直接无法直接通信，需要借助veth –&gt; docker0 这样进行通信。</p>
+</li>
+<li><p>宿主机上的veth 与 docker容器里面的 etho 是网络设备对。</p>
+</li>
+<li><p>bridage 网络的端口映射,将宿主机上面的某一端口，映射到容器的某一个端口。</p>
+</li>
+</ol>
+</li>
+</ol>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">将镜像中暴漏出来的端口，全部随机映射到宿主机:</span><br><span class="line">docker run -dti --name test_redis -P redis </span><br><span class="line">0.0.0.0:32768-&gt;6379/tcp</span><br><span class="line">镜像只有暴露了端口，才能使用。</span><br></pre></td></tr></table></figure>
+
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -dti --name test_redis -p 127.0.0.1:8000:6379 redis(本地ip 127.0.0.1,8000端口，映射到容器的6379端口)</span><br><span class="line">docker run -dti --name test_redis -p :8000:6379 redis  (本地8000端口映射，任意ip访问)</span><br><span class="line">docker run -dti --name test_redis -p ::6379 redis  (本地随机端口映射，任意ip访问)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>Host网络</p>
+<ol>
+<li>容器完全共享宿主机的网络，没有任何网络隔离，宿主机的网络就是容器的网络</li>
+<li>容器、宿主机上所有的端口不能重复，即端口必须唯一</li>
+<li>外部可以直接访问容器，无需端口映射</li>
+<li>容器的ip就是宿主机的ip   </li>
+</ol>
+</li>
+<li><p>none 网络  </p>
+<ol>
+<li>容器上没有网络，也没有任何网络设备</li>
+<li>如果需要网络，需要用户自行安装与配置</li>
+<li>该模式适合需要高度制定网络的用户使用</li>
+</ol>
+</li>
+<li><p>Overlay 网络</p>
+<ol>
+<li>也称覆盖网络，主要用于实现跨主机容器间的通讯。</li>
+</ol>
+</li>
+</ol>
 
       </div>
       <div class="post-copyright">
@@ -146,7 +185,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://Daong.com/2019/08/31/Docker_basic/">https://Daong.com/2019/08/31/Docker_basic/</a>
+      <a href="https://Daong.com/2019/09/07/Docker_network/">https://Daong.com/2019/09/07/Docker_network/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
@@ -157,13 +196,13 @@
             <a href="/tags/Docker/">Docker</a>
             </div>
         
-        <nav class="post-nav"><a class="prev" href="/2019/09/07/Docker_network/">
+        <nav class="post-nav"><a class="prev" href="/2019/09/08/Docker_data_volume/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Docker基础之网络</span>
+        <span class="prev-text nav-default">Docker数据卷操作</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
-    <a class="next" href="/2019/08/25/first_blog/">
-        <span class="next-text nav-default">耗时1天，搞定hexo。</span>
+    <a class="next" href="/2019/08/31/Docker_basic/">
+        <span class="next-text nav-default">Docker基础命令</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
