@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Docker之Dockerfile"><meta name="keywords" content="Docker, 大东的博客"><link rel="alternate" href="/atom.xml" title="大东的博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=3.11.0">
+<link rel="canonical" href="https://Daong.com/2019/09/11/DockerFile/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=3.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Docker之Dockerfile - 大东的博客</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">大东的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">主页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">大东的博客</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            主页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Docker之Dockerfile
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-11
+        </span><span class="post-category">
+            <a href="/categories/虚拟化/">虚拟化</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Dockerfile："><span class="toc-text">什么是Dockerfile：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile的撰写示例"><span class="toc-text">Dockerfile的撰写示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile文档中的命令："><span class="toc-text">Dockerfile文档中的命令：</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h3 id="什么是Dockerfile："><a href="#什么是Dockerfile：" class="headerlink" title="什么是Dockerfile："></a>什么是Dockerfile：</h3><p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 Docker通过读取<code>Dockerfile</code>中的指令自动生成映像。</p>
+<p><code>docker build</code>命令用于从Dockerfile构建映像。可以在<code>docker build</code>命令中使用<code>-f</code>标志指向文件系统中任何位置的Dockerfile。</p>
+<h3 id="Dockerfile的撰写示例"><a href="#Dockerfile的撰写示例" class="headerlink" title="Dockerfile的撰写示例"></a>Dockerfile的撰写示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 搭建一个基于flask 的web项目</span><br><span class="line">FROM python:3.6-alpine</span><br><span class="line">LABEL Description=&quot;本镜像用于启动建议的基于flask的web程序&quot; Author=&quot;Itcast&quot; Version=&quot;1.0&quot;</span><br><span class="line"># 将代码保存到镜像</span><br><span class="line">COPY ./code /flask-code</span><br><span class="line"># 运行目录至code 目录下</span><br><span class="line">WORKDIR /flask-code</span><br><span class="line"># 执行 安装 项目需要的依赖</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line"># 执行代码</span><br><span class="line">CMD [&quot;python&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>docker build /home/dockerfile-dir/ -t test-image:v1.0     -t的代表命名  </p>
+<p>执行上述命令，会执行/home/dockerfile-dir/  下面的Dockerfile文件</p>
+<h3 id="Dockerfile文档中的命令："><a href="#Dockerfile文档中的命令：" class="headerlink" title="Dockerfile文档中的命令："></a>Dockerfile文档中的命令：</h3><ol>
+<li><p>FROM   //指定基于哪个基础镜像格式 FROM <p_w_picpath> 或者  FROM <p_w_picpath>:<tag>，  比如</tag></p_w_picpath></p_w_picpath></p>
+<p>FROM centos</p>
+<p>FROM centos:latest</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>MAINTAINER  //指定作者信息</p>
+<p>格式  MAINTAIN <name> ，比如</name></p>
+<p>MAINTAINER  aming  <a href="mailto:aming@aminglinux.com" target="_blank" rel="noopener">aming@aminglinux.com</a></p>
+</li>
+</ol>
+<ol start="3">
+<li><p>RUN   //镜像操作指令</p>
+<p>格式为 RUN <command>  或者 RUN [“executable”, “param1”, “param2”]，比如</p>
+<p>RUN  yum install  httpdRUN [“/bin/bash”, “-c”, “echo hello”]</p>
+</li>
+</ol>
+<ol start="4">
+<li><p>CMD  // 三种格式：CMD [“executable”, “param1”, “param2”]CMD command param1 param2</p>
+<p>CMD [“param1”, “param2”]</p>
+<p>RUN和CMD看起来挺像，但是CMD用来指定容器启动时用到的命令，只能有一条。比如</p>
+<p>CMD [“/bin/bash”, “/usr/local/nginx/sbin/nginx”, “-c”, “/usr/local/nginx/conf/nginx.conf”]</p>
+</li>
+</ol>
+<ol start="5">
+<li><p>EXPOSE  格式为 EXPOSE <port> [<port>…] , 比如</port></port></p>
+<p>EXPOSE 22 80 8443这个用来指定要映射出去的端口，比如容器内部我们启动了sshd和nginx，所以我们需要把22和80端口暴漏出去。这个需要配合-P（大写）来工作，也就是说在启动容器时，需要加上-P，让它自动分配。如果想指定具体的端口，也可以使用-p（小写）来指定。</p>
+</li>
+</ol>
+<ol start="6">
+<li><p>ENV  格式 ENV  <key> <value>, 比如  </value></key></p>
+<p>ENV PATH /usr/local/mysql/bin:$PATH它主要是为后续的RUN指令提供一个环境变量，我们也可以定义一些自定义的变量</p>
+<p>ENV MYSQL_version 5.6</p>
+</li>
+</ol>
+<ol start="7">
+<li><p>ADD  </p>
+<p>格式 add <src> <dest></dest></src></p>
+<p>将本地的一个文件或目录拷贝到容器的某个目录里。 其中src为Dockerfile所在目录的相对路径，它也可以是一个url。比如</p>
+<p>ADD &lt;conf/vhosts&gt; &lt;/usr/local/nginx/conf&gt;</p>
+</li>
+</ol>
+<ol start="8">
+<li><p>COPY  格式同add</p>
+<p>使用方法和add一样，不同的是，它不支持url</p>
+</li>
+</ol>
+<ol start="9">
+<li><p>ENTRYPOINT  </p>
+<p>格式类似CMD</p>
+<p>容器启动时要执行的命令，它和CMD很像，也是只有一条生效，如果写多个只有最后一条有效。和CMD不同是：CMD 是可以被 docker run 指令覆盖的，而ENTRYPOINT不能覆盖。比如，容器名字为aming</p>
+<p>我们在Dockerfile中指定如下CMD：</p>
+<p>CMD [“/bin/echo”, “test ”]</p>
+<p>启动容器的命令是  docker run aming 这样会输出 test</p>
+<p>假如启动容器的命令是 docker run -it aming  /bin/bash  什么都不会输出</p>
+<p>ENTRYPOINT不会被覆盖，而且会比CMD或者docker run指定的命令要靠前执行</p>
+<p>ENTRYPOINT [“echo”, “test”]</p>
+<p>docker run -it aming  123</p>
+<p>则会输入 test  123 ，这相当于要执行命令  echo test  123 </p>
+</li>
+</ol>
+<ol start="10">
+<li><p>VOLUME </p>
+<p>格式  VOLUME [“/data”]</p>
+<p>创建一个可以从本地主机或其他容器挂载的挂载点。</p>
+</li>
+</ol>
+<ol start="11">
+<li><p>USER  </p>
+<p>格式 USER daemon</p>
+<p>指定运行容器的用户</p>
+</li>
+</ol>
+<ol start="12">
+<li><p>WORKDIR  </p>
+<p>格式 WORKDIR  /path/to/workdir</p>
+<p>为后续的RUN、CMD或者ENTRYPOINT指定工作目录</p>
+</li>
+</ol>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://Daong.com">东子</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://Daong.com/2019/09/11/DockerFile/">https://Daong.com/2019/09/11/DockerFile/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/Docker/">Docker</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/2019/09/14/docker_compose/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Docker之Docker-compose</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/09/08/Docker_data_volume/">
+        <span class="next-text nav-default">Docker基础之数据卷</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:18529453871@163.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/DaDong-G" class="iconfont icon-github" title="github"></a>
+        </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2018 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">东子</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=3.11.0"></script>
+</body>
+</html>

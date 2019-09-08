@@ -106,7 +106,134 @@
         <div class="content-wrapper">
           <div id="content" class="content"><section id="posts" class="posts"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/09/08/Docker_data_volume/">Docker数据卷操作</a>
+      <h1 class="post-title"><a class="post-link" href="/2019/09/14/docker_compose/">Docker之Docker-compose</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-14
+        </span><span class="post-category">
+            <a href="/categories/虚拟化/">虚拟化</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h3 id="什么是Docker-compose"><a href="#什么是Docker-compose" class="headerlink" title="什么是Docker-compose"></a>什么是Docker-compose</h3><p>docker-compose技术，就是通过一个 <strong>.yml</strong> 配置文件，将所有的容器的部署方法、文件映射、容器连接等等一系列的配置写在一个配置文件里，最后只需要执行docker-compose up命令就会像执行脚本一样的去一个个安装容器并自动部署他们，极大的便利了复杂服务的部署。</p>
+<h3 id="Docker-compose-撰写案例"><a href="#Docker-compose-撰写案例" class="headerlink" title="Docker-compose 撰写案例"></a>Docker-compose 撰写案例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.6&quot;   # 代表语言版本</span><br><span class="line">services: # 代表要启动哪几个容器</span><br><span class="line">  flask-web: # 自己起一个名字</span><br><span class="line">    build: .  # 如果使用dockerfile就是用build .,如果是已经有的镜像，使用用images</span><br><span class="line">    ports: # 需要映射的端口 很多种写法，可以查</span><br><span class="line">      - &quot;5000:5000&quot;</span><br><span class="line">    container_name: flask-web # 容器起个名字</span><br><span class="line">    networks: # 使用的网络</span><br><span class="line">      - web</span><br><span class="line">  redis: #  容器项目 名字</span><br><span class="line">    image: redis  # 使用的镜像 redis </span><br><span class="line">    container_name: redis # 容器名称</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line">    volumes: # 容器挂载的地址，遵循下面的volumes写，可以保证即便删除，下次数据不会丢失，都存在了数据卷里面。  </span><br><span class="line">      - redis-dat:/data # 将数据卷挂载到容器/data 文件  </span><br><span class="line">networks: # 定义网络类型</span><br><span class="line">  web:</span><br><span class="line">    driver: &quot;bridge&quot;  # 设置网络类型</span><br><span class="line">volumes: # 容器挂载地址</span><br><span class="line">  redis-dat:  # 代表的是 name</span><br><span class="line">    driver: &quot;local&quot;    # 代表的是DRIVERname</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker-compose-命令"><a href="#Docker-compose-命令" class="headerlink" title="Docker-compose 命令"></a>Docker-compose 命令</h3><p>docker-compose up：该命令可以自动完成包括构建镜像，(重新)创建服务，启动服务，并关联服务相关容器的一系列操作。 -d 代表后台运行</p>
+<p>docker-compose pause ：暂停服务<br>docker-compose unpause  ：恢复被暂停的服务</p>
+<p>dokcer-compose ps ： 此命令与docker ps不同作用，此命令会显示停止后的容器（状态为Exited），只针对某个项目。</p>
+<p>docker-compose restart [service_name]：重启某个项目，只有正在运行的服务可以使用重启命令，停止的服务是不可以重启</p>
+<p>docker-compose start : 启动运行某个服务的所有容器<br>docker-compose stop : 停止运行某个服务的所有容器</p>
+<p>docker-compose logs [service_name] : 显示service的日志信息</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/09/11/DockerFile/">Docker之Dockerfile</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-11
+        </span><span class="post-category">
+            <a href="/categories/虚拟化/">虚拟化</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><h3 id="什么是Dockerfile："><a href="#什么是Dockerfile：" class="headerlink" title="什么是Dockerfile："></a>什么是Dockerfile：</h3><p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 Docker通过读取<code>Dockerfile</code>中的指令自动生成映像。</p>
+<p><code>docker build</code>命令用于从Dockerfile构建映像。可以在<code>docker build</code>命令中使用<code>-f</code>标志指向文件系统中任何位置的Dockerfile。</p>
+<h3 id="Dockerfile的撰写示例"><a href="#Dockerfile的撰写示例" class="headerlink" title="Dockerfile的撰写示例"></a>Dockerfile的撰写示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 搭建一个基于flask 的web项目</span><br><span class="line">FROM python:3.6-alpine</span><br><span class="line">LABEL Description=&quot;本镜像用于启动建议的基于flask的web程序&quot; Author=&quot;Itcast&quot; Version=&quot;1.0&quot;</span><br><span class="line"># 将代码保存到镜像</span><br><span class="line">COPY ./code /flask-code</span><br><span class="line"># 运行目录至code 目录下</span><br><span class="line">WORKDIR /flask-code</span><br><span class="line"># 执行 安装 项目需要的依赖</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line"># 执行代码</span><br><span class="line">CMD [&quot;python&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>docker build /home/dockerfile-dir/ -t test-image:v1.0     -t的代表命名  </p>
+<p>执行上述命令，会执行/home/dockerfile-dir/  下面的Dockerfile文件</p>
+<h3 id="Dockerfile文档中的命令："><a href="#Dockerfile文档中的命令：" class="headerlink" title="Dockerfile文档中的命令："></a>Dockerfile文档中的命令：</h3><ol>
+<li><p>FROM   //指定基于哪个基础镜像格式 FROM <p_w_picpath> 或者  FROM <p_w_picpath>:<tag>，  比如</tag></p_w_picpath></p_w_picpath></p>
+<p>FROM centos</p>
+<p>FROM centos:latest</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>MAINTAINER  //指定作者信息</p>
+<p>格式  MAINTAIN <name> ，比如</name></p>
+<p>MAINTAINER  aming  <a href="mailto:aming@aminglinux.com" target="_blank" rel="noopener">aming@aminglinux.com</a></p>
+</li>
+</ol>
+<ol start="3">
+<li><p>RUN   //镜像操作指令</p>
+<p>格式为 RUN <command>  或者 RUN [“executable”, “param1”, “param2”]，比如</p>
+<p>RUN  yum install  httpdRUN [“/bin/bash”, “-c”, “echo hello”]</p>
+</li>
+</ol>
+<ol start="4">
+<li><p>CMD  // 三种格式：CMD [“executable”, “param1”, “param2”]CMD command param1 param2</p>
+<p>CMD [“param1”, “param2”]</p>
+<p>RUN和CMD看起来挺像，但是CMD用来指定容器启动时用到的命令，只能有一条。比如</p>
+<p>CMD [“/bin/bash”, “/usr/local/nginx/sbin/nginx”, “-c”, “/usr/local/nginx/conf/nginx.conf”]</p>
+</li>
+</ol>
+<ol start="5">
+<li><p>EXPOSE  格式为 EXPOSE <port> [<port>…] , 比如</port></port></p>
+<p>EXPOSE 22 80 8443这个用来指定要映射出去的端口，比如容器内部我们启动了sshd和nginx，所以我们需要把22和80端口暴漏出去。这个需要配合-P（大写）来工作，也就是说在启动容器时，需要加上-P，让它自动分配。如果想指定具体的端口，也可以使用-p（小写）来指定。</p>
+</li>
+</ol>
+<ol start="6">
+<li><p>ENV  格式 ENV  <key> <value>, 比如  </value></key></p>
+<p>ENV PATH /usr/local/mysql/bin:$PATH它主要是为后续的RUN指令提供一个环境变量，我们也可以定义一些自定义的变量</p>
+<p>ENV MYSQL_version 5.6</p>
+</li>
+</ol>
+<ol start="7">
+<li><p>ADD  </p>
+<p>格式 add <src> <dest></dest></src></p>
+<p>将本地的一个文件或目录拷贝到容器的某个目录里。 其中src为Dockerfile所在目录的相对路径，它也可以是一个url。比如</p>
+<p>ADD &lt;conf/vhosts&gt; &lt;/usr/local/nginx/conf&gt;</p>
+</li>
+</ol>
+<ol start="8">
+<li><p>COPY  格式同add</p>
+<p>使用方法和add一样，不同的是，它不支持url</p>
+</li>
+</ol>
+<ol start="9">
+<li><p>ENTRYPOINT  </p>
+<p>格式类似CMD</p>
+<p>容器启动时要执行的命令，它和CMD很像，也是只有一条生效，如果写多个只有最后一条有效。和CMD不同是：CMD 是可以被 docker run 指令覆盖的，而ENTRYPOINT不能覆盖。比如，容器名字为aming</p>
+<p>我们在Dockerfile中指定如下CMD：</p>
+<p>CMD [“/bin/echo”, “test ”]</p>
+<p>启动容器的命令是  docker run aming 这样会输出 test</p>
+<p>假如启动容器的命令是 docker run -it aming  /bin/bash  什么都不会输出</p>
+<p>ENTRYPOINT不会被覆盖，而且会比CMD或者docker run指定的命令要靠前执行</p>
+<p>ENTRYPOINT [“echo”, “test”]</p>
+<p>docker run -it aming  123</p>
+<p>则会输入 test  123 ，这相当于要执行命令  echo test  123 </p>
+</li>
+</ol>
+<ol start="10">
+<li><p>VOLUME </p>
+<p>格式  VOLUME [“/data”]</p>
+<p>创建一个可以从本地主机或其他容器挂载的挂载点。</p>
+</li>
+</ol>
+<ol start="11">
+<li><p>USER  </p>
+<p>格式 USER daemon</p>
+<p>指定运行容器的用户</p>
+</li>
+</ol>
+<ol start="12">
+<li><p>WORKDIR  </p>
+<p>格式 WORKDIR  /path/to/workdir</p>
+<p>为后续的RUN、CMD或者ENTRYPOINT指定工作目录</p>
+</li>
+</ol>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2019/09/08/Docker_data_volume/">Docker基础之数据卷</a>
         </h1>
 
       <div class="post-meta">

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://Daong.com/"/>
-  <updated>2019-09-07T10:24:24.578Z</updated>
+  <updated>2019-09-08T07:15:41.681Z</updated>
   <id>https://Daong.com/</id>
   
   <author>
@@ -17,11 +17,61 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Docker数据卷操作</title>
+    <title>Docker之Docker-compose</title>
+    <link href="https://Daong.com/2019/09/14/docker_compose/"/>
+    <id>https://Daong.com/2019/09/14/docker_compose/</id>
+    <published>2019-09-14T02:09:00.000Z</published>
+    <updated>2019-09-08T07:15:41.681Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="什么是Docker-compose"><a href="#什么是Docker-compose" class="headerlink" title="什么是Docker-compose"></a>什么是Docker-compose</h3><p>docker-compose技术，就是通过一个 <strong>.yml</strong> 配置文件，将所有的容器的部署方法、文件映射、容器连接等等一系列的配置写在一个配置文件里，最后只需要执行docker-compose up命令就会像执行脚本一样的去一个个安装容器并自动部署他们，极大的便利了复杂服务的部署。</p><h3 id="Docker-compose-撰写案例"><a href="#Docker-compose-撰写案例" class="headerlink" title="Docker-compose 撰写案例"></a>Docker-compose 撰写案例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.6&quot;   # 代表语言版本</span><br><span class="line">services: # 代表要启动哪几个容器</span><br><span class="line">  flask-web: # 自己起一个名字</span><br><span class="line">    build: .  # 如果使用dockerfile就是用build .,如果是已经有的镜像，使用用images</span><br><span class="line">    ports: # 需要映射的端口 很多种写法，可以查</span><br><span class="line">      - &quot;5000:5000&quot;</span><br><span class="line">    container_name: flask-web # 容器起个名字</span><br><span class="line">    networks: # 使用的网络</span><br><span class="line">      - web</span><br><span class="line">  redis: #  容器项目 名字</span><br><span class="line">    image: redis  # 使用的镜像 redis </span><br><span class="line">    container_name: redis # 容器名称</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line">    volumes: # 容器挂载的地址，遵循下面的volumes写，可以保证即便删除，下次数据不会丢失，都存在了数据卷里面。  </span><br><span class="line">      - redis-dat:/data # 将数据卷挂载到容器/data 文件  </span><br><span class="line">networks: # 定义网络类型</span><br><span class="line">  web:</span><br><span class="line">    driver: &quot;bridge&quot;  # 设置网络类型</span><br><span class="line">volumes: # 容器挂载地址</span><br><span class="line">  redis-dat:  # 代表的是 name</span><br><span class="line">    driver: &quot;local&quot;    # 代表的是DRIVERname</span><br></pre></td></tr></table></figure><h3 id="Docker-compose-命令"><a href="#Docker-compose-命令" class="headerlink" title="Docker-compose 命令"></a>Docker-compose 命令</h3><p>docker-compose up：该命令可以自动完成包括构建镜像，(重新)创建服务，启动服务，并关联服务相关容器的一系列操作。 -d 代表后台运行</p><p>docker-compose pause ：暂停服务<br>docker-compose unpause  ：恢复被暂停的服务</p><p>dokcer-compose ps ： 此命令与docker ps不同作用，此命令会显示停止后的容器（状态为Exited），只针对某个项目。</p><p>docker-compose restart [service_name]：重启某个项目，只有正在运行的服务可以使用重启命令，停止的服务是不可以重启</p><p>docker-compose start : 启动运行某个服务的所有容器<br>docker-compose stop : 停止运行某个服务的所有容器</p><p>docker-compose logs [service_name] : 显示service的日志信息</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;什么是Docker-compose&quot;&gt;&lt;a href=&quot;#什么是Docker-compose&quot; class=&quot;headerlink&quot; title=&quot;什么是Docker-compose&quot;&gt;&lt;/a&gt;什么是Docker-compose&lt;/h3&gt;&lt;p&gt;docker-com
+      
+    
+    </summary>
+    
+      <category term="虚拟化" scheme="https://Daong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+    
+      <category term="Docker" scheme="https://Daong.com/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker之Dockerfile</title>
+    <link href="https://Daong.com/2019/09/11/DockerFile/"/>
+    <id>https://Daong.com/2019/09/11/DockerFile/</id>
+    <published>2019-09-11T02:09:00.000Z</published>
+    <updated>2019-09-08T06:44:01.371Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="什么是Dockerfile："><a href="#什么是Dockerfile：" class="headerlink" title="什么是Dockerfile："></a>什么是Dockerfile：</h3><p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 Docker通过读取<code>Dockerfile</code>中的指令自动生成映像。</p><p><code>docker build</code>命令用于从Dockerfile构建映像。可以在<code>docker build</code>命令中使用<code>-f</code>标志指向文件系统中任何位置的Dockerfile。</p><h3 id="Dockerfile的撰写示例"><a href="#Dockerfile的撰写示例" class="headerlink" title="Dockerfile的撰写示例"></a>Dockerfile的撰写示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 搭建一个基于flask 的web项目</span><br><span class="line">FROM python:3.6-alpine</span><br><span class="line">LABEL Description=&quot;本镜像用于启动建议的基于flask的web程序&quot; Author=&quot;Itcast&quot; Version=&quot;1.0&quot;</span><br><span class="line"># 将代码保存到镜像</span><br><span class="line">COPY ./code /flask-code</span><br><span class="line"># 运行目录至code 目录下</span><br><span class="line">WORKDIR /flask-code</span><br><span class="line"># 执行 安装 项目需要的依赖</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line"># 执行代码</span><br><span class="line">CMD [&quot;python&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure><p>docker build /home/dockerfile-dir/ -t test-image:v1.0     -t的代表命名  </p><p>执行上述命令，会执行/home/dockerfile-dir/  下面的Dockerfile文件</p><h3 id="Dockerfile文档中的命令："><a href="#Dockerfile文档中的命令：" class="headerlink" title="Dockerfile文档中的命令："></a>Dockerfile文档中的命令：</h3><ol><li><p>FROM   //指定基于哪个基础镜像格式 FROM <p_w_picpath> 或者  FROM <p_w_picpath>:<tag>，  比如</tag></p_w_picpath></p_w_picpath></p><p>FROM centos</p><p>FROM centos:latest</p></li></ol><ol start="2"><li><p>MAINTAINER  //指定作者信息</p><p>格式  MAINTAIN <name> ，比如</name></p><p>MAINTAINER  aming  <a href="mailto:aming@aminglinux.com" target="_blank" rel="noopener">aming@aminglinux.com</a></p></li></ol><ol start="3"><li><p>RUN   //镜像操作指令</p><p>格式为 RUN <command>  或者 RUN [“executable”, “param1”, “param2”]，比如</p><p>RUN  yum install  httpdRUN [“/bin/bash”, “-c”, “echo hello”]</p></li></ol><ol start="4"><li><p>CMD  // 三种格式：CMD [“executable”, “param1”, “param2”]CMD command param1 param2</p><p>CMD [“param1”, “param2”]</p><p>RUN和CMD看起来挺像，但是CMD用来指定容器启动时用到的命令，只能有一条。比如</p><p>CMD [“/bin/bash”, “/usr/local/nginx/sbin/nginx”, “-c”, “/usr/local/nginx/conf/nginx.conf”]</p></li></ol><ol start="5"><li><p>EXPOSE  格式为 EXPOSE <port> [<port>…] , 比如</port></port></p><p>EXPOSE 22 80 8443这个用来指定要映射出去的端口，比如容器内部我们启动了sshd和nginx，所以我们需要把22和80端口暴漏出去。这个需要配合-P（大写）来工作，也就是说在启动容器时，需要加上-P，让它自动分配。如果想指定具体的端口，也可以使用-p（小写）来指定。</p></li></ol><ol start="6"><li><p>ENV  格式 ENV  <key> <value>, 比如  </value></key></p><p>ENV PATH /usr/local/mysql/bin:$PATH它主要是为后续的RUN指令提供一个环境变量，我们也可以定义一些自定义的变量</p><p>ENV MYSQL_version 5.6</p></li></ol><ol start="7"><li><p>ADD  </p><p>格式 add <src> <dest></dest></src></p><p>将本地的一个文件或目录拷贝到容器的某个目录里。 其中src为Dockerfile所在目录的相对路径，它也可以是一个url。比如</p><p>ADD &lt;conf/vhosts&gt; &lt;/usr/local/nginx/conf&gt;</p></li></ol><ol start="8"><li><p>COPY  格式同add</p><p>使用方法和add一样，不同的是，它不支持url</p></li></ol><ol start="9"><li><p>ENTRYPOINT  </p><p>格式类似CMD</p><p>容器启动时要执行的命令，它和CMD很像，也是只有一条生效，如果写多个只有最后一条有效。和CMD不同是：CMD 是可以被 docker run 指令覆盖的，而ENTRYPOINT不能覆盖。比如，容器名字为aming</p><p>我们在Dockerfile中指定如下CMD：</p><p>CMD [“/bin/echo”, “test ”]</p><p>启动容器的命令是  docker run aming 这样会输出 test</p><p>假如启动容器的命令是 docker run -it aming  /bin/bash  什么都不会输出</p><p>ENTRYPOINT不会被覆盖，而且会比CMD或者docker run指定的命令要靠前执行</p><p>ENTRYPOINT [“echo”, “test”]</p><p>docker run -it aming  123</p><p>则会输入 test  123 ，这相当于要执行命令  echo test  123 </p></li></ol><ol start="10"><li><p>VOLUME </p><p>格式  VOLUME [“/data”]</p><p>创建一个可以从本地主机或其他容器挂载的挂载点。</p></li></ol><ol start="11"><li><p>USER  </p><p>格式 USER daemon</p><p>指定运行容器的用户</p></li></ol><ol start="12"><li><p>WORKDIR  </p><p>格式 WORKDIR  /path/to/workdir</p><p>为后续的RUN、CMD或者ENTRYPOINT指定工作目录</p></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;什么是Dockerfile：&quot;&gt;&lt;a href=&quot;#什么是Dockerfile：&quot; class=&quot;headerlink&quot; title=&quot;什么是Dockerfile：&quot;&gt;&lt;/a&gt;什么是Dockerfile：&lt;/h3&gt;&lt;p&gt;Dockerfile是一个包含用于组合映像的
+      
+    
+    </summary>
+    
+      <category term="虚拟化" scheme="https://Daong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+    
+      <category term="Docker" scheme="https://Daong.com/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker基础之数据卷</title>
     <link href="https://Daong.com/2019/09/08/Docker_data_volume/"/>
     <id>https://Daong.com/2019/09/08/Docker_data_volume/</id>
     <published>2019-09-08T02:09:00.000Z</published>
-    <updated>2019-09-07T10:24:24.578Z</updated>
+    <updated>2019-09-08T05:10:26.461Z</updated>
     
     <content type="html"><![CDATA[<h3 id="数据卷挂载的三种方式"><a href="#数据卷挂载的三种方式" class="headerlink" title="数据卷挂载的三种方式"></a>数据卷挂载的三种方式</h3><ul><li>bind mounts：将宿主机上的一个文件或目录被挂载到容器上。</li><li>volumes: 由docker创建和管理，使用docker volume 命令管理，相当于是对bind mounts 的封装。</li><li>tmpfs mounts: 一种基于内存的的临时文件系统，该方法不会将数据写入磁盘，写在内存中。</li></ul><h3 id="volume-相关命令："><a href="#volume-相关命令：" class="headerlink" title="volume 相关命令："></a>volume 相关命令：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker volume create [name] 创建数据卷</span><br><span class="line"></span><br><span class="line">docker volume inspect [name] 查看数据卷详情</span><br><span class="line"></span><br><span class="line">docker volume prune 删除未使用的数据卷</span><br><span class="line"></span><br><span class="line">docker volume ls 查看所有数据卷</span><br><span class="line"></span><br><span class="line">docker rm volume</span><br></pre></td></tr></table></figure><h3 id="bind-mounts："><a href="#bind-mounts：" class="headerlink" title="bind mounts："></a>bind mounts：</h3><ol><li><p>方法一： -v 参数，跟文件路径</p><p>​    docker run -dit  -v /volume:/data –name centos_test centos </p><p>​    将/volume 挂载到 容器 /data ,如果本地的文件不存在，会自动创建</p></li><li><p>方法二：–mount type=bind,src=本地路径,dst=容器路径  centos </p><p>​    docker run -dit –mount type=bind,src=/volume,dst=/root/v –name centos_test centos</p><p>​    将/volume 挂载到 容器 /root/v,如果本地的文件不存在，报错</p></li></ol><h3 id="volumes："><a href="#volumes：" class="headerlink" title="volumes："></a>volumes：</h3><ol><li><p>方法一： -v 参数  跟数据卷的名称</p><p>​    docker run -dit -v volume-test:/root/a centos</p><p>​    docker 会创建出来一个volume数据卷挂载到容器的 root/a路径</p></li><li><p>方法二：–mount type=volume,src=本地路径,dst=容器路径  centos </p><p>​    docker run -dit –mount type=volume,src=volume-test(数据卷名称),dst=/root/v   centos</p><p>​    文件不存在不会报错，都会自动创建</p></li></ol><h3 id="tmpfs-："><a href="#tmpfs-：" class="headerlink" title="tmpfs ："></a>tmpfs ：</h3><p>​        –mount type=tmpfs,dst=容器路径  centos。只有一种方法</p><h3 id="共享其他容器的数据卷："><a href="#共享其他容器的数据卷：" class="headerlink" title="共享其他容器的数据卷："></a>共享其他容器的数据卷：</h3><p>​            docker run -dti –volumes-from 容器名  镜像名 </p><h3 id="数据卷使用注意："><a href="#数据卷使用注意：" class="headerlink" title="数据卷使用注意："></a>数据卷使用注意：</h3><p>​            <strong>如果挂载一个空的数据卷到容器中的一个非空目录中，那么这个目录下的文件会被复制到数据卷中。<br>​            如果挂载一个非空的数据卷到容器中的一个目录中，那么容器中的目录中会显示数据卷中的数据。如果原            来容器中的目录中有数据，那么这些原始数据会被隐藏掉。</strong></p><p>​    </p>]]></content>
     
