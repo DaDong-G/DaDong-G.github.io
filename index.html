@@ -1,124 +1,684 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
 
 
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 
-<meta name="theme-color" content="#f8f5ec">
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="技术、python、go、运维"><link rel="alternate" href="/atom.xml" title="大东的博客"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=3.11.0">
-<link rel="canonical" href="https://Daong.com/">
 
-<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=3.11.0">
 
-<script id="baidu_push">
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="大东的博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="技术、python、go、运维">
+<meta property="og:type" content="website">
+<meta property="og:title" content="大东的博客">
+<meta property="og:url" content="https://Daong.com/index.html">
+<meta property="og:site_name" content="大东的博客">
+<meta property="og:description" content="技术、python、go、运维">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大东的博客">
+<meta name="twitter:description" content="技术、python、go、运维">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-<script>
-  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+  };
 </script>
 
-    <title>大东的博客</title>
-  </head>
 
-  <body><div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/." class="logo">大东的博客</a>
+
+  <link rel="canonical" href="https://Daong.com/">
+
+
+
+
+
+  <title>大东的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">大东的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">东子的技术博客</p>
+      
   </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
   </div>
 </div>
 
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list"><a href="/">
-        <li class="mobile-menu-item">主页
-          </li>
-      </a><a href="/archives/">
-        <li class="mobile-menu-item">归档
-          </li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">标签
-          </li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">分类
-          </li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">关于
-          </li>
-      </a></ul>
-</nav>
-<div class="container" id="mobile-panel">
-      <header id="header" class="header"><div class="logo-wrapper">
-  <a href="/." class="logo">大东的博客</a>
-</div>
+<nav class="site-nav">
+  
 
-<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
-          <a class="menu-item-link" href="/">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-主页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
             主页
-            </a>
+          </a>
         </li>
-      <li class="menu-item">
-          <a class="menu-item-link" href="/archives/">
-            归档
-            </a>
-        </li>
-      <li class="menu-item">
-          <a class="menu-item-link" href="/tags/">
-            标签
-            </a>
-        </li>
-      <li class="menu-item">
-          <a class="menu-item-link" href="/categories/">
-            分类
-            </a>
-        </li>
-      <li class="menu-item">
-          <a class="menu-item-link" href="/about/">
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
             关于
-            </a>
+          </a>
         </li>
-      </ul></nav>
-</header>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
 
-      <main id="main" class="main">
-        <div class="content-wrapper">
-          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/09/14/docker_compose/">Docker之Docker-compose</a>
-        </h1>
+      
+    </ul>
+  
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-09-14
-        </span><span class="post-category">
-            <a href="/categories/虚拟化/">虚拟化</a>
-            </span>
-        </div>
+  
+</nav>
+
+
+
+ </div>
     </header>
 
-    <div class="post-content"><h3 id="什么是Docker-compose"><a href="#什么是Docker-compose" class="headerlink" title="什么是Docker-compose"></a>什么是Docker-compose</h3><p>docker-compose技术，就是通过一个 <strong>.yml</strong> 配置文件，将所有的容器的部署方法、文件映射、容器连接等等一系列的配置写在一个配置文件里，最后只需要执行docker-compose up命令就会像执行脚本一样的去一个个安装容器并自动部署他们，极大的便利了复杂服务的部署。</p>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/21/Mysql_optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/21/Mysql_optimization/" itemprop="url">Mysql数据库查询优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T10:09:40+08:00">
+                2019-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="如何获得有性能问题的sql"><a href="#如何获得有性能问题的sql" class="headerlink" title="如何获得有性能问题的sql"></a>如何获得有性能问题的sql</h3><p><strong>慢查询日志：</strong></p>
+<p>​    MySQL的慢查询日志是MySQL提供的一种日志记录，它用来记录在MySQL中响应时间超过阀值的语句，具体指运行时间超过long_query_time值的SQL，则会被记录到慢查询日志中。long_query_time的默认值为10，意思是运行10S以上的语句。默认情况下，Mysql数据库并不启动慢查询日志，需要我们手动来设置这个参数，当然，如果不是调优需要的话，一般不建议启动该参数，因为开启慢查询日志会或多或少带来一定的性能影响。慢查询日志支持将日志记录写入文件，也支持将日志记录写入数据库表。</p>
+<p><strong>MySQL 慢查询的相关参数解释：</strong></p>
+<p>slow_query_log    ：是否开启慢查询日志，1表示开启，0表示关闭。<br>log-slow-queries  ：旧版（5.6以下版本）MySQL数据库慢查询日志存储路径。可以不设置该参数，系统则会默认给一个缺省的文件host_name-slow.log<br>slow-query-log-file：新版（5.6及以上版本）MySQL数据库慢查询日志存储路径。可以不设置该参数，系统则会默认给一个缺省的文件host_name-slow.log<br>long_query_time ：慢查询阈值，当查询时间多于设定的阈值时，记录日志。<br>log_queries_not_using_indexes：未使用索引的查询也被记录到慢查询日志中（可选项）。<br>log_output：日志存储方式。log_output=’FILE’表示将日志存入文件，默认值是’FILE’。log_output=’TABLE’表示将日志存入数据库，这样日志信息就会被写入到mysql.slow_log表中。MySQL数据库支持同时两种日志存储方式，配置的时候以逗号隔开即可，如：log_output=’FILE,TABLE’。日志记录到系统的专用日志表中，要比记录到文件耗费更多的系统资源，因此对于需要启用慢查询日志，又需要能够获得更高的系统性能，那么建议优先记录到文件。</p>
+<p><strong>慢查询日志配置</strong></p>
+<p>​        默认情况下slow_query_log的值为OFF，表示慢查询日志是禁用的，可以通过设置slow_query_log的值来开启，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables  like &apos;%slow_query_log%&apos;;</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| Variable_name       | Value                                         |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| slow_query_log      | OFF                                           |</span><br><span class="line">| slow_query_log_file | /home/WDPM/MysqlData/mysql/DB-Server-slow.log |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt; set global slow_query_log=1;</span><br><span class="line">Query OK, 0 rows affected (0.09 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt; show variables like &apos;%slow_query_log%&apos;;</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| Variable_name       | Value                                         |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| slow_query_log      | ON                                            |</span><br><span class="line">| slow_query_log_file | /home/WDPM/MysqlData/mysql/DB-Server-slow.log |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>慢查询日志相关分析工具mysqldumpslow</strong><br>​        -s, 是表示按照何种方式排序，</p>
+<blockquote>
+<p>c: 访问计数</p>
+<p>l: 锁定时间</p>
+<p>r: 返回记录</p>
+<p>t: 查询时间</p>
+<p>al:平均锁定时间</p>
+<p>ar:平均返回记录数</p>
+<p>at:平均查询时间</p>
+</blockquote>
+<p>-t, 是top n的意思，即为返回前面多少条的数据；<br>-g, 后边可以写一个正则匹配模式，大小写不敏感的；<br>比如<br>得到返回记录集最多的10个SQL。<br>mysqldumpslow -s r -t 10 /database/mysql/mysql06_slow.log<br>得到访问次数最多的10个SQL<br>mysqldumpslow -s c -t 10 /database/mysql/mysql06_slow.log<br>得到按照时间排序的前10条里面含有左连接的查询语句。<br>mysqldumpslow -s t -t 10 -g “left join” /database/mysql/mysql06_slow.log<br>另外建议在使用这些命令时结合 | 和more 使用 ，否则有可能出现刷屏的情况。<br>mysqldumpslow -s r -t 20 /mysqldata/mysql/mysql06-slow.log | more<br>实时获取有问题的sql</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/14/Mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/14/Mysql/" itemprop="url">Mysql数据库的事务</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-14T10:09:40+08:00">
+                2019-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Mysql事务四个特性"><a href="#Mysql事务四个特性" class="headerlink" title="Mysql事务四个特性"></a>Mysql事务四个特性</h3><ul>
+<li>一致性</li>
+<li>原子性</li>
+<li>隔离性</li>
+<li>持久性</li>
+</ul>
+<h4 id="原子性："><a href="#原子性：" class="headerlink" title="原子性："></a>原子性：</h4><p>整个事务中所有的操作要么全部提交成功，要么全部失败回滚。</p>
+<h4 id="一致性："><a href="#一致性：" class="headerlink" title="一致性："></a>一致性：</h4><p>数据库中的数据从一种状态转到另外一种状态，数据的完整性没有被破坏。</p>
+<h4 id="隔离性："><a href="#隔离性：" class="headerlink" title="隔离性："></a>隔离性：</h4><ol>
+<li><p>未提交读(Read-uncommited)：<br>(begin)开启一个事务(A)，对数据进行了更改，并未commit。此时另外一个事务(B)，可以读取到事务A 修改的数据。所以，如果事务A突然崩溃回滚，那么事务(B)读取的数据是不正确的。 未提交读也称为脏读。</p>
+</li>
+<li><p>读取-已提交(Read-committed):<br>例1： (begin)开启一个事务(A),对数据(money:200 )进行了修改(money:2000)，并未commit，此时另外一个事务(B)无法读取到修改后的数据，如果此时B也对数据进行修改(money:200)修改为(money:2000) UPDATE test_shiwu SET money = 300 WHERE money = 2000;, 那么将会阻塞，直到事务A commit 才能解除阻塞，解除后无法修改，因为无法找money = 2000的数据，此时money已经被A修改成了200。<br>例2：(begin)开启一个事务(A), (begin)开启一个事务(B),A事务修改了数据，并且进行了提交，此时B事务对数据进行查询，可以读取到A修改后的数据。</p>
+</li>
+<li><p>可重复读取(RepeaTable-Read):<br>(begin)开启一个事务(A), (begin)开启一个事务(B),A事务修改了数据，并且进行了提交，此时B事务对数据进行查询，查到的数据依然是修改前的数据，只有B事务commit后，才能读取到A修改后的数据。</p>
+</li>
+<li><p>串行化(serializable):</p>
+<p> (begin)开启一个事务(A), (begin)开启一个事务(B)，由于A事务先开启，所以此时B操作数据库任何信息都会发生阻塞，直到A commit 才能解除阻塞。    </p>
+</li>
+</ol>
+<h4 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h4><p>事务一旦提交，其更改是永久性的，即使数据库系统崩溃也能恢复。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/14/docker_compose/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/14/docker_compose/" itemprop="url">Docker之Docker-compose</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-14T10:09:00+08:00">
+                2019-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
+                    <span itemprop="name">虚拟化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么是Docker-compose"><a href="#什么是Docker-compose" class="headerlink" title="什么是Docker-compose"></a>什么是Docker-compose</h3><p>docker-compose技术，就是通过一个 <strong>.yml</strong> 配置文件，将所有的容器的部署方法、文件映射、容器连接等等一系列的配置写在一个配置文件里，最后只需要执行docker-compose up命令就会像执行脚本一样的去一个个安装容器并自动部署他们，极大的便利了复杂服务的部署。</p>
 <h3 id="Docker-compose-撰写案例"><a href="#Docker-compose-撰写案例" class="headerlink" title="Docker-compose 撰写案例"></a>Docker-compose 撰写案例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.6&quot;   # 代表语言版本</span><br><span class="line">services: # 代表要启动哪几个容器</span><br><span class="line">  flask-web: # 自己起一个名字</span><br><span class="line">    build: .  # 如果使用dockerfile就是用build .,如果是已经有的镜像，使用用images</span><br><span class="line">    ports: # 需要映射的端口 很多种写法，可以查</span><br><span class="line">      - &quot;5000:5000&quot;</span><br><span class="line">    container_name: flask-web # 容器起个名字</span><br><span class="line">    networks: # 使用的网络</span><br><span class="line">      - web</span><br><span class="line">  redis: #  容器项目 名字</span><br><span class="line">    image: redis  # 使用的镜像 redis </span><br><span class="line">    container_name: redis # 容器名称</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line">    volumes: # 容器挂载的地址，遵循下面的volumes写，可以保证即便删除，下次数据不会丢失，都存在了数据卷里面。  </span><br><span class="line">      - redis-dat:/data # 将数据卷挂载到容器/data 文件  </span><br><span class="line">networks: # 定义网络类型</span><br><span class="line">  web:</span><br><span class="line">    driver: &quot;bridge&quot;  # 设置网络类型</span><br><span class="line">volumes: # 容器挂载地址</span><br><span class="line">  redis-dat:  # 代表的是 name</span><br><span class="line">    driver: &quot;local&quot;    # 代表的是DRIVERname</span><br></pre></td></tr></table></figure>
 
 <h3 id="Docker-compose-命令"><a href="#Docker-compose-命令" class="headerlink" title="Docker-compose 命令"></a>Docker-compose 命令</h3><p>docker-compose up：该命令可以自动完成包括构建镜像，(重新)创建服务，启动服务，并关联服务相关容器的一系列操作。 -d 代表后台运行</p>
@@ -128,22 +688,147 @@
 <p>docker-compose start : 启动运行某个服务的所有容器<br>docker-compose stop : 停止运行某个服务的所有容器</p>
 <p>docker-compose logs [service_name] : 显示service的日志信息</p>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/09/11/DockerFile/">Docker之Dockerfile</a>
-        </h1>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-09-11
-        </span><span class="post-category">
-            <a href="/categories/虚拟化/">虚拟化</a>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/11/DockerFile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/11/DockerFile/" itemprop="url">Docker之Dockerfile</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-11T10:09:00+08:00">
+                2019-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
+                    <span itemprop="name">虚拟化</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
-        </div>
-    </header>
+          
 
-    <div class="post-content"><h3 id="什么是Dockerfile："><a href="#什么是Dockerfile：" class="headerlink" title="什么是Dockerfile："></a>什么是Dockerfile：</h3><p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 Docker通过读取<code>Dockerfile</code>中的指令自动生成映像。</p>
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么是Dockerfile："><a href="#什么是Dockerfile：" class="headerlink" title="什么是Dockerfile："></a>什么是Dockerfile：</h3><p>Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 Docker通过读取<code>Dockerfile</code>中的指令自动生成映像。</p>
 <p><code>docker build</code>命令用于从Dockerfile构建映像。可以在<code>docker build</code>命令中使用<code>-f</code>标志指向文件系统中任何位置的Dockerfile。</p>
 <h3 id="Dockerfile的撰写示例"><a href="#Dockerfile的撰写示例" class="headerlink" title="Dockerfile的撰写示例"></a>Dockerfile的撰写示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 搭建一个基于flask 的web项目</span><br><span class="line">FROM python:3.6-alpine</span><br><span class="line">LABEL Description=&quot;本镜像用于启动建议的基于flask的web程序&quot; Author=&quot;Itcast&quot; Version=&quot;1.0&quot;</span><br><span class="line"># 将代码保存到镜像</span><br><span class="line">COPY ./code /flask-code</span><br><span class="line"># 运行目录至code 目录下</span><br><span class="line">WORKDIR /flask-code</span><br><span class="line"># 执行 安装 项目需要的依赖</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line"># 执行代码</span><br><span class="line">CMD [&quot;python&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure>
 
@@ -230,22 +915,147 @@
 </li>
 </ol>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/09/08/Docker_data_volume/">Docker基础之数据卷</a>
-        </h1>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-09-08
-        </span><span class="post-category">
-            <a href="/categories/虚拟化/">虚拟化</a>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/08/Docker_data_volume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/08/Docker_data_volume/" itemprop="url">Docker基础之数据卷</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-08T10:09:00+08:00">
+                2019-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
+                    <span itemprop="name">虚拟化</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
-        </div>
-    </header>
+          
 
-    <div class="post-content"><h3 id="数据卷挂载的三种方式"><a href="#数据卷挂载的三种方式" class="headerlink" title="数据卷挂载的三种方式"></a>数据卷挂载的三种方式</h3><ul>
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="数据卷挂载的三种方式"><a href="#数据卷挂载的三种方式" class="headerlink" title="数据卷挂载的三种方式"></a>数据卷挂载的三种方式</h3><ul>
 <li>bind mounts：将宿主机上的一个文件或目录被挂载到容器上。</li>
 <li>volumes: 由docker创建和管理，使用docker volume 命令管理，相当于是对bind mounts 的封装。</li>
 <li>tmpfs mounts: 一种基于内存的的临时文件系统，该方法不会将数据写入磁盘，写在内存中。</li>
@@ -277,22 +1087,147 @@
 <h3 id="数据卷使用注意："><a href="#数据卷使用注意：" class="headerlink" title="数据卷使用注意："></a>数据卷使用注意：</h3><p>​            <strong>如果挂载一个空的数据卷到容器中的一个非空目录中，那么这个目录下的文件会被复制到数据卷中。<br>​            如果挂载一个非空的数据卷到容器中的一个目录中，那么容器中的目录中会显示数据卷中的数据。如果原            来容器中的目录中有数据，那么这些原始数据会被隐藏掉。</strong></p>
 <p>​    </p>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/09/07/Docker_network/">Docker基础之网络</a>
-        </h1>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-09-07
-        </span><span class="post-category">
-            <a href="/categories/虚拟化/">虚拟化</a>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/07/Docker_network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/07/Docker_network/" itemprop="url">Docker基础之网络</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T14:40:40+08:00">
+                2019-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
+                    <span itemprop="name">虚拟化</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
-        </div>
-    </header>
+          
 
-    <div class="post-content"><h3 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h3><p>容器的网络默认与宿主机，其他容器都是相互隔离的。</p>
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h3><p>容器的网络默认与宿主机，其他容器都是相互隔离的。</p>
 <p><strong>查看docker已经创建的网络对象</strong>： docker network ls </p>
 <p><strong>查看网络详情</strong>：docker network inspect 网络名/id</p>
 <p><strong>创建网络</strong>：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。 </p>
@@ -346,22 +1281,147 @@
 </li>
 </ol>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/08/31/Docker_basic/">Docker基础命令</a>
-        </h1>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-08-31
-        </span><span class="post-category">
-            <a href="/categories/虚拟化/">虚拟化</a>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/08/31/Docker_basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/31/Docker_basic/" itemprop="url">Docker基础命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-31T11:40:40+08:00">
+                2019-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
+                    <span itemprop="name">虚拟化</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
-        </div>
-    </header>
+          
 
-    <div class="post-content"><h3 id="Docker基础命令总结"><a href="#Docker基础命令总结" class="headerlink" title="Docker基础命令总结"></a>Docker基础命令总结</h3><p><strong>搜索镜像</strong>: docker search &lt;image名称&gt;<br>可以列出仓库中所有的docker镜像，  isoffic代表是否官方</p>
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Docker基础命令总结"><a href="#Docker基础命令总结" class="headerlink" title="Docker基础命令总结"></a>Docker基础命令总结</h3><p><strong>搜索镜像</strong>: docker search &lt;image名称&gt;<br>可以列出仓库中所有的docker镜像，  isoffic代表是否官方</p>
 <p><strong>查看当前镜像</strong>: docker images / docker image ls             -a 显示所有镜像<br>两者相等。可以列出自己本地所有的镜像。如果查看镜像是否相同，只需要看 IMAGE ID  是否相同  </p>
 <p><strong>下载镜像</strong>: docker pull  Name[:版本号]<br>下载的镜像默认latest 最新版本</p>
 <p><strong>删除镜像</strong>：docker -rmi name[:版本号]  或者  Imageid</p>
@@ -376,22 +1436,147 @@
 <p><strong>运行时操作</strong>：<br>docker attach [OPTIONS] CONTAINER    退出时，容器就关闭了  进入主进程<br>docker exec -it  container  命令     退出时 不会关闭容器  进入子进程，子进程不会进入log日志</p>
 <p><strong>停止容器</strong>：docker kill -9 直接杀死容器，docker stop  容器名  -t  2(默认10秒，-t可以设置停止时间)</p>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/08/25/first_blog/">耗时1天，搞定hexo。</a>
-        </h1>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2019-08-25
-        </span><span class="post-category">
-            <a href="/categories/其他/">其他</a>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/08/25/first_blog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/25/first_blog/" itemprop="url">耗时1天，搞定hexo。</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-25T11:40:40+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
-        </div>
-    </header>
+          
 
-    <div class="post-content"><h3 id="详解Hexo，快速上手，从使用到部署。"><a href="#详解Hexo，快速上手，从使用到部署。" class="headerlink" title="详解Hexo，快速上手，从使用到部署。"></a>详解Hexo，快速上手，从使用到部署。</h3><hr>
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="详解Hexo，快速上手，从使用到部署。"><a href="#详解Hexo，快速上手，从使用到部署。" class="headerlink" title="详解Hexo，快速上手，从使用到部署。"></a>详解Hexo，快速上手，从使用到部署。</h3><hr>
 <p>[TOC]</p>
 <h3 id="第一步：准备基础工具"><a href="#第一步：准备基础工具" class="headerlink" title="第一步：准备基础工具"></a>第一步：准备基础工具</h3><ul>
 <li>安装Git：<a href="https://gitforwindows.org/" target="_blank" rel="noopener">Download git</a></li>
@@ -443,38 +1628,332 @@ $ npm install 可能会遇到坑，每个人的环境都不一样，网上的解
 <p>执行命令：hexo clean &amp;&amp; hexo g &amp;&amp; hexo d<br>可以参考github部署<a href="https://segmentfault.com/a/1190000018250408" target="_blank" rel="noopener">详细教程</a></p>
 <h3 id="第八步：最后一步，绑定自己的域名。"><a href="#第八步：最后一步，绑定自己的域名。" class="headerlink" title="第八步：最后一步，绑定自己的域名。"></a>第八步：最后一步，绑定自己的域名。</h3><p>直接跟着这个链接配置即可。<a href="https://blog.csdn.net/Wonz5130/article/details/82828761" target="_blank" rel="noopener">https://blog.csdn.net/Wonz5130/article/details/82828761</a></p>
 
-        </div></article>
-      <nav class="pagination"></nav></section></div></div>
-      </main>
+          
+        
+      
+    </div>
+    
+    
+    
 
-      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:18529453871@163.com" class="iconfont icon-email" title="email"></a>
-        <a href="https://github.com/DaDong-G" class="iconfont icon-github" title="github"></a>
-        </div><div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+    
 
-  <span class="copyright-year">&copy;2018 - 2019<span class="heart">
-      <i class="iconfont icon-heart"></i>
-    </span>
-    <span class="author">东子</span>
-  </span>
-</div>
-</footer>
+    
 
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">东子</p>
+              <p class="site-description motion-element" itemprop="description">技术、python、go、运维</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
       </div>
-    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
-  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
-  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
-  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
-  <script type="text/javascript" src="/js/src/even.js?v=3.11.0"></script>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">东子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

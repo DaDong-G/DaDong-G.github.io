@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://Daong.com/"/>
-  <updated>2019-09-08T07:15:41.681Z</updated>
+  <updated>2019-10-02T03:19:31.937Z</updated>
   <id>https://Daong.com/</id>
   
   <author>
@@ -15,6 +15,59 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Mysql数据库查询优化</title>
+    <link href="https://Daong.com/2019/09/21/Mysql_optimization/"/>
+    <id>https://Daong.com/2019/09/21/Mysql_optimization/</id>
+    <published>2019-09-21T02:09:40.000Z</published>
+    <updated>2019-10-02T03:19:31.937Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="如何获得有性能问题的sql"><a href="#如何获得有性能问题的sql" class="headerlink" title="如何获得有性能问题的sql"></a>如何获得有性能问题的sql</h3><p><strong>慢查询日志：</strong></p><p>​    MySQL的慢查询日志是MySQL提供的一种日志记录，它用来记录在MySQL中响应时间超过阀值的语句，具体指运行时间超过long_query_time值的SQL，则会被记录到慢查询日志中。long_query_time的默认值为10，意思是运行10S以上的语句。默认情况下，Mysql数据库并不启动慢查询日志，需要我们手动来设置这个参数，当然，如果不是调优需要的话，一般不建议启动该参数，因为开启慢查询日志会或多或少带来一定的性能影响。慢查询日志支持将日志记录写入文件，也支持将日志记录写入数据库表。</p><p><strong>MySQL 慢查询的相关参数解释：</strong></p><p>slow_query_log    ：是否开启慢查询日志，1表示开启，0表示关闭。<br>log-slow-queries  ：旧版（5.6以下版本）MySQL数据库慢查询日志存储路径。可以不设置该参数，系统则会默认给一个缺省的文件host_name-slow.log<br>slow-query-log-file：新版（5.6及以上版本）MySQL数据库慢查询日志存储路径。可以不设置该参数，系统则会默认给一个缺省的文件host_name-slow.log<br>long_query_time ：慢查询阈值，当查询时间多于设定的阈值时，记录日志。<br>log_queries_not_using_indexes：未使用索引的查询也被记录到慢查询日志中（可选项）。<br>log_output：日志存储方式。log_output=’FILE’表示将日志存入文件，默认值是’FILE’。log_output=’TABLE’表示将日志存入数据库，这样日志信息就会被写入到mysql.slow_log表中。MySQL数据库支持同时两种日志存储方式，配置的时候以逗号隔开即可，如：log_output=’FILE,TABLE’。日志记录到系统的专用日志表中，要比记录到文件耗费更多的系统资源，因此对于需要启用慢查询日志，又需要能够获得更高的系统性能，那么建议优先记录到文件。</p><p><strong>慢查询日志配置</strong></p><p>​        默认情况下slow_query_log的值为OFF，表示慢查询日志是禁用的，可以通过设置slow_query_log的值来开启，如下所示：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables  like &apos;%slow_query_log%&apos;;</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| Variable_name       | Value                                         |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| slow_query_log      | OFF                                           |</span><br><span class="line">| slow_query_log_file | /home/WDPM/MysqlData/mysql/DB-Server-slow.log |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt; set global slow_query_log=1;</span><br><span class="line">Query OK, 0 rows affected (0.09 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt; show variables like &apos;%slow_query_log%&apos;;</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| Variable_name       | Value                                         |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">| slow_query_log      | ON                                            |</span><br><span class="line">| slow_query_log_file | /home/WDPM/MysqlData/mysql/DB-Server-slow.log |</span><br><span class="line">+---------------------+-----------------------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"> </span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure><p><strong>慢查询日志相关分析工具mysqldumpslow</strong><br>​        -s, 是表示按照何种方式排序，</p><blockquote><p>c: 访问计数</p><p>l: 锁定时间</p><p>r: 返回记录</p><p>t: 查询时间</p><p>al:平均锁定时间</p><p>ar:平均返回记录数</p><p>at:平均查询时间</p></blockquote><p>-t, 是top n的意思，即为返回前面多少条的数据；<br>-g, 后边可以写一个正则匹配模式，大小写不敏感的；<br>比如<br>得到返回记录集最多的10个SQL。<br>mysqldumpslow -s r -t 10 /database/mysql/mysql06_slow.log<br>得到访问次数最多的10个SQL<br>mysqldumpslow -s c -t 10 /database/mysql/mysql06_slow.log<br>得到按照时间排序的前10条里面含有左连接的查询语句。<br>mysqldumpslow -s t -t 10 -g “left join” /database/mysql/mysql06_slow.log<br>另外建议在使用这些命令时结合 | 和more 使用 ，否则有可能出现刷屏的情况。<br>mysqldumpslow -s r -t 20 /mysqldata/mysql/mysql06-slow.log | more<br>实时获取有问题的sql</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;如何获得有性能问题的sql&quot;&gt;&lt;a href=&quot;#如何获得有性能问题的sql&quot; class=&quot;headerlink&quot; title=&quot;如何获得有性能问题的sql&quot;&gt;&lt;/a&gt;如何获得有性能问题的sql&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;慢查询日志：&lt;/strong&gt;&lt;/p
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://Daong.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="Mysql" scheme="https://Daong.com/tags/Mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mysql数据库的事务</title>
+    <link href="https://Daong.com/2019/09/14/Mysql/"/>
+    <id>https://Daong.com/2019/09/14/Mysql/</id>
+    <published>2019-09-14T02:09:40.000Z</published>
+    <updated>2019-09-14T07:49:41.119Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Mysql事务四个特性"><a href="#Mysql事务四个特性" class="headerlink" title="Mysql事务四个特性"></a>Mysql事务四个特性</h3><ul><li>一致性</li><li>原子性</li><li>隔离性</li><li>持久性</li></ul><h4 id="原子性："><a href="#原子性：" class="headerlink" title="原子性："></a>原子性：</h4><p>整个事务中所有的操作要么全部提交成功，要么全部失败回滚。</p><h4 id="一致性："><a href="#一致性：" class="headerlink" title="一致性："></a>一致性：</h4><p>数据库中的数据从一种状态转到另外一种状态，数据的完整性没有被破坏。</p><h4 id="隔离性："><a href="#隔离性：" class="headerlink" title="隔离性："></a>隔离性：</h4><ol><li><p>未提交读(Read-uncommited)：<br>(begin)开启一个事务(A)，对数据进行了更改，并未commit。此时另外一个事务(B)，可以读取到事务A 修改的数据。所以，如果事务A突然崩溃回滚，那么事务(B)读取的数据是不正确的。 未提交读也称为脏读。</p></li><li><p>读取-已提交(Read-committed):<br>例1： (begin)开启一个事务(A),对数据(money:200 )进行了修改(money:2000)，并未commit，此时另外一个事务(B)无法读取到修改后的数据，如果此时B也对数据进行修改(money:200)修改为(money:2000) UPDATE test_shiwu SET money = 300 WHERE money = 2000;, 那么将会阻塞，直到事务A commit 才能解除阻塞，解除后无法修改，因为无法找money = 2000的数据，此时money已经被A修改成了200。<br>例2：(begin)开启一个事务(A), (begin)开启一个事务(B),A事务修改了数据，并且进行了提交，此时B事务对数据进行查询，可以读取到A修改后的数据。</p></li><li><p>可重复读取(RepeaTable-Read):<br>(begin)开启一个事务(A), (begin)开启一个事务(B),A事务修改了数据，并且进行了提交，此时B事务对数据进行查询，查到的数据依然是修改前的数据，只有B事务commit后，才能读取到A修改后的数据。</p></li><li><p>串行化(serializable):</p><p> (begin)开启一个事务(A), (begin)开启一个事务(B)，由于A事务先开启，所以此时B操作数据库任何信息都会发生阻塞，直到A commit 才能解除阻塞。    </p></li></ol><h4 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h4><p>事务一旦提交，其更改是永久性的，即使数据库系统崩溃也能恢复。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;Mysql事务四个特性&quot;&gt;&lt;a href=&quot;#Mysql事务四个特性&quot; class=&quot;headerlink&quot; title=&quot;Mysql事务四个特性&quot;&gt;&lt;/a&gt;Mysql事务四个特性&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;一致性&lt;/li&gt;
+&lt;li&gt;原子性&lt;/li&gt;
+&lt;li&gt;隔离
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://Daong.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="Mysql" scheme="https://Daong.com/tags/Mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>Docker之Docker-compose</title>
