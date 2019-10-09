@@ -176,7 +176,7 @@
     <link href="https://Daong.com/2019/08/31/Docker_basic/"/>
     <id>https://Daong.com/2019/08/31/Docker_basic/</id>
     <published>2019-08-31T03:40:40.000Z</published>
-    <updated>2019-09-07T09:31:24.517Z</updated>
+    <updated>2019-10-09T01:34:55.897Z</updated>
     
     <content type="html"><![CDATA[<h3 id="Docker基础命令总结"><a href="#Docker基础命令总结" class="headerlink" title="Docker基础命令总结"></a>Docker基础命令总结</h3><p><strong>搜索镜像</strong>: docker search &lt;image名称&gt;<br>可以列出仓库中所有的docker镜像，  isoffic代表是否官方</p><p><strong>查看当前镜像</strong>: docker images / docker image ls             -a 显示所有镜像<br>两者相等。可以列出自己本地所有的镜像。如果查看镜像是否相同，只需要看 IMAGE ID  是否相同  </p><p><strong>下载镜像</strong>: docker pull  Name[:版本号]<br>下载的镜像默认latest 最新版本</p><p><strong>删除镜像</strong>：docker -rmi name[:版本号]  或者  Imageid</p><p><strong>查看镜像/容器详细信息</strong>：docker inspect  镜像名/容器名  （ID也可以）</p><p><strong>查看容器</strong>： docker ps （查看已经启动的） -a （查看所有的容器）</p><p><strong>容器重命名</strong>：docker rename  容器名</p><p><strong>创建并启动程序</strong>：<br>docker run – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           前台模式<br>docker run -d – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           后台模式 </p><p><strong>启动容器参数详解</strong>：-d 参数后台运行 ，-t  容器启动是否进入终端，-i 容器启动是否提供输出功能 (例:如果没有-i,输入ls ,不会打印任何内容) 。建议自己尝试执行docker run -i / docker -t 查看区别。</p><p><strong>容器暂停</strong>：  docker pause / unpause </p><p><strong>重启容器</strong>：docker restart  容器名/容器id   新名字</p><p><strong>查看容器日志</strong>：docker log  容器名</p><p><strong>运行时操作</strong>：<br>docker attach [OPTIONS] CONTAINER    退出时，容器就关闭了  进入主进程<br>docker exec -it  container  命令     退出时 不会关闭容器  进入子进程，子进程不会进入log日志</p><p><strong>停止容器</strong>：docker kill -9 直接杀死容器，docker stop  容器名  -t  2(默认10秒，-t可以设置停止时间)</p>]]></content>
     
