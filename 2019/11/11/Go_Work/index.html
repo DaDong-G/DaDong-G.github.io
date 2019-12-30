@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Docker,">
+  <meta name="keywords" content="并发编程,">
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="Docker网络容器的网络默认与宿主机，其他容器都是相互隔离的。 查看docker已经创建的网络对象： docker network ls  查看网络详情：docker network inspect 网络名/id 创建网络：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。  删除网络：docker ne">
-<meta name="keywords" content="Docker">
+<meta name="description" content="Go 语言并发，使用无缓冲通道构建并发池。首先构建一个并发池，有两个字段一个是work  通道类型，一个是sync.WaitGroup。 1234type Pool struct &amp;#123;   	work chan Worker   	wg sync.WaitGroup&amp;#125;  为工作并发池 提供一个接口 123type Worker interface &amp;#123;	Task()&amp;#1">
+<meta name="keywords" content="并发编程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker基础之网络">
-<meta property="og:url" content="https://Daong.com/2019/09/07/Docker_network/index.html">
+<meta property="og:title" content="Go语言中无缓冲通道实现并发池">
+<meta property="og:url" content="https://Daong.com/2019/11/11/Go_Work/index.html">
 <meta property="og:site_name" content="大东的博客">
-<meta property="og:description" content="Docker网络容器的网络默认与宿主机，其他容器都是相互隔离的。 查看docker已经创建的网络对象： docker network ls  查看网络详情：docker network inspect 网络名/id 创建网络：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。  删除网络：docker ne">
+<meta property="og:description" content="Go 语言并发，使用无缓冲通道构建并发池。首先构建一个并发池，有两个字段一个是work  通道类型，一个是sync.WaitGroup。 1234type Pool struct &amp;#123;   	work chan Worker   	wg sync.WaitGroup&amp;#125;  为工作并发池 提供一个接口 123type Worker interface &amp;#123;	Task()&amp;#1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-07T09:17:37.534Z">
+<meta property="og:updated_time" content="2019-12-29T10:27:19.998Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker基础之网络">
-<meta name="twitter:description" content="Docker网络容器的网络默认与宿主机，其他容器都是相互隔离的。 查看docker已经创建的网络对象： docker network ls  查看网络详情：docker network inspect 网络名/id 创建网络：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。  删除网络：docker ne">
+<meta name="twitter:title" content="Go语言中无缓冲通道实现并发池">
+<meta name="twitter:description" content="Go 语言并发，使用无缓冲通道构建并发池。首先构建一个并发池，有两个字段一个是work  通道类型，一个是sync.WaitGroup。 1234type Pool struct &amp;#123;   	work chan Worker   	wg sync.WaitGroup&amp;#125;  为工作并发池 提供一个接口 123type Worker interface &amp;#123;	Task()&amp;#1">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://Daong.com/2019/09/07/Docker_network/">
+  <link rel="canonical" href="https://Daong.com/2019/11/11/Go_Work/">
 
 
 
 
 
-  <title>Docker基础之网络 | 大东的博客</title>
+  <title>Go语言中无缓冲通道实现并发池 | 大东的博客</title>
   
 
 
@@ -265,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/07/Docker_network/">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/11/11/Go_Work/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="东子">
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Docker基础之网络</h1>
+          <h1 class="post-title" itemprop="name headline">Go语言中无缓冲通道实现并发池</h1>
         
 
         <div class="post-meta">
@@ -294,8 +294,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T14:40:40+08:00">
-                2019-09-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-11T10:09:00+08:00">
+                2019-11-11
               </time>
             
 
@@ -317,8 +317,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
-                    <span itemprop="name">虚拟化</span>
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
                   </a>
                 </span>
 
@@ -354,59 +354,24 @@
       
 
       
-        <h3 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h3><p>容器的网络默认与宿主机，其他容器都是相互隔离的。</p>
-<p><strong>查看docker已经创建的网络对象</strong>： docker network ls </p>
-<p><strong>查看网络详情</strong>：docker network inspect 网络名/id</p>
-<p><strong>创建网络</strong>：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。 </p>
-<p><strong>删除网络</strong>：docker network rm 网络名/id</p>
-<p><strong>使用网络</strong>：docker run  –network host -dti –name 容器名 镜像名</p>
-<p><strong>Docker网络类型</strong>：</p>
-<ol>
-<li><p>bridage</p>
-<ol>
-<li><p>宿主机需要有单独的bridage网卡，如docker 默认创建的docker0</p>
-</li>
-<li><p>外部无法直接访问容器，需要建立端口映射</p>
-</li>
-<li><p>每创建一个bridage网络，都会自动在宿主机上创建一个veth的网络。</p>
-</li>
-<li><p>每一个容器都有单独的ip。</p>
-</li>
-<li><p>容器直接无法直接通信，需要借助veth –&gt; docker0 这样进行通信。</p>
-</li>
-<li><p>宿主机上的veth 与 docker容器里面的 etho 是网络设备对。</p>
-</li>
-<li><p>bridage 网络的端口映射,将宿主机上面的某一端口，映射到容器的某一个端口。</p>
-</li>
-</ol>
-</li>
-</ol>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">将镜像中暴漏出来的端口，全部随机映射到宿主机:</span><br><span class="line">docker run -dti --name test_redis -P redis </span><br><span class="line">0.0.0.0:32768-&gt;6379/tcp</span><br><span class="line">镜像只有暴露了端口，才能使用。</span><br></pre></td></tr></table></figure>
+        <h2 id="Go-语言并发，使用无缓冲通道构建并发池。"><a href="#Go-语言并发，使用无缓冲通道构建并发池。" class="headerlink" title="Go 语言并发，使用无缓冲通道构建并发池。"></a>Go 语言并发，使用无缓冲通道构建并发池。</h2><p>首先构建一个并发池，有两个字段一个是work  通道类型，一个是sync.WaitGroup。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type Pool struct &#123;   </span><br><span class="line">	work chan Worker   </span><br><span class="line">	wg sync.WaitGroup</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -dti --name test_redis -p 127.0.0.1:8000:6379 redis(本地ip 127.0.0.1,8000端口，映射到容器的6379端口)</span><br><span class="line">docker run -dti --name test_redis -p :8000:6379 redis  (本地8000端口映射，任意ip访问)</span><br><span class="line">docker run -dti --name test_redis -p ::6379 redis  (本地随机端口映射，任意ip访问)</span><br></pre></td></tr></table></figure>
+<p>为工作并发池 提供一个接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Worker interface &#123;</span><br><span class="line">	Task()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li><p>Host网络</p>
-<ol>
-<li>容器完全共享宿主机的网络，没有任何网络隔离，宿主机的网络就是容器的网络</li>
-<li>容器、宿主机上所有的端口不能重复，即端口必须唯一</li>
-<li>外部可以直接访问容器，无需端口映射</li>
-<li>容器的ip就是宿主机的ip   </li>
-</ol>
-</li>
-<li><p>none 网络  </p>
-<ol>
-<li>容器上没有网络，也没有任何网络设备</li>
-<li>如果需要网络，需要用户自行安装与配置</li>
-<li>该模式适合需要高度制定网络的用户使用</li>
-</ol>
-</li>
-<li><p>Overlay 网络</p>
-<ol>
-<li>也称覆盖网络，主要用于实现跨主机容器间的通讯。</li>
-</ol>
-</li>
-</ol>
+<p>接着创建一个新的工作池，使用工厂函数来创建,返回值为Pool</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func New(maxGoroutines int) *Pool  &#123;</span><br><span class="line">	p := Pool&#123;</span><br><span class="line">		work : make(chan Worker),</span><br><span class="line">	&#125;</span><br><span class="line">	p.wg.Add(maxGorotuine) //往并发池添加并发的数量</span><br><span class="line">	for i:= 0 ; i &lt; maxGoroutines; i ++&#123;</span><br><span class="line">		go func() &#123;</span><br><span class="line">			for w := range p.work&#123;   // 这里会发生阻塞，在创建的时候，异步阻塞，返回一个池</span><br><span class="line">				w.Task()</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">		p.wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;p</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将工作提交到工作池</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (p *Pool)Run(w Worker)  &#123;</span><br><span class="line">	p.work &lt;- w</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关闭工作池</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func (p *Pool)Shutdown()&#123;   </span><br><span class="line">	close(p.work)   </span><br><span class="line">	p.wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来是对上面的使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var names = []string&#123;</span><br><span class="line">	&quot;steve&quot;,</span><br><span class="line">	&quot;bob&quot;,</span><br><span class="line">	&quot;mary&quot;,</span><br><span class="line">	&quot;therese&quot;,</span><br><span class="line">	&quot;jason&quot;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type namePrinter struct &#123;</span><br><span class="line">	name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *namePrinter)Task()  &#123;</span><br><span class="line">	fmt.Println(m.name)</span><br><span class="line">	time.Sleep(time.Second )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	p := New(10) //创建10个并发池子</span><br><span class="line">	var wg sync.WaitGroup</span><br><span class="line">	wg.Add(10 * len(names))</span><br><span class="line"></span><br><span class="line">	// time.Sleep(3 * time.Second)</span><br><span class="line"></span><br><span class="line">	for i :=0 ; i &lt; 10 ; i ++&#123;</span><br><span class="line">		for _ , name := range names&#123;</span><br><span class="line">			np := namePrinter&#123;</span><br><span class="line">				name : name,</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			go func() &#123;</span><br><span class="line">				p.Run(&amp;np)</span><br><span class="line">				wg.Done()</span><br><span class="line">			&#125;()</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait()</span><br><span class="line">	p.Shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -424,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Docker/" rel="tag"># Docker</a>
+            <a href="/tags/并发编程/" rel="tag"># 并发编程</a>
           
         </div>
       
@@ -437,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/31/Docker_basic/" rel="next" title="Docker基础命令">
-                <i class="fa fa-chevron-left"></i> Docker基础命令
+              <a href="/2019/10/15/Go日志定制/" rel="next" title="Go语言中基本的日志格式">
+                <i class="fa fa-chevron-left"></i> Go语言中基本的日志格式
               </a>
             
           </div>
@@ -447,8 +412,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/08/Docker_data_volume/" rel="prev" title="Docker基础之数据卷">
-                Docker基础之数据卷 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/11/28/Context/" rel="prev" title="Go语言通过Context控制goroutine的退出">
+                Go语言通过Context控制goroutine的退出 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -588,7 +553,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker网络"><span class="nav-number">1.</span> <span class="nav-text">Docker网络</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Go-语言并发，使用无缓冲通道构建并发池。"><span class="nav-number">1.</span> <span class="nav-text">Go 语言并发，使用无缓冲通道构建并发池。</span></a></li></ol></div>
             
 
           </div>

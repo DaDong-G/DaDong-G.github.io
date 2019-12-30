@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="日志,">
 
 
 
@@ -81,17 +81,18 @@
 
 
 
-<meta name="description" content="郭大东的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="大东的博客">
-<meta property="og:url" content="https://Daong.com/about/index.html">
+<meta name="description" content="Go语言日志的基本格式123456789101112131415161718192021222324252627282930313233package mainimport (	&amp;quot;io&amp;quot;	&amp;quot;io/ioutil&amp;quot;	&amp;quot;log&amp;quot;	&amp;quot;os&amp;quot;)func main()  &amp;#123;	Trace.Println(&amp;quot;这是T">
+<meta name="keywords" content="日志">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言中基本的日志格式">
+<meta property="og:url" content="https://Daong.com/2019/10/15/Go日志定制/index.html">
 <meta property="og:site_name" content="大东的博客">
-<meta property="og:description" content="郭大东的博客">
+<meta property="og:description" content="Go语言日志的基本格式123456789101112131415161718192021222324252627282930313233package mainimport (	&amp;quot;io&amp;quot;	&amp;quot;io/ioutil&amp;quot;	&amp;quot;log&amp;quot;	&amp;quot;os&amp;quot;)func main()  &amp;#123;	Trace.Println(&amp;quot;这是T">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-09T01:04:07.138Z">
+<meta property="og:updated_time" content="2019-12-29T10:26:30.335Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="大东的博客">
-<meta name="twitter:description" content="郭大东的博客">
+<meta name="twitter:title" content="Go语言中基本的日志格式">
+<meta name="twitter:description" content="Go语言日志的基本格式123456789101112131415161718192021222324252627282930313233package mainimport (	&amp;quot;io&amp;quot;	&amp;quot;io/ioutil&amp;quot;	&amp;quot;log&amp;quot;	&amp;quot;os&amp;quot;)func main()  &amp;#123;	Trace.Println(&amp;quot;这是T">
 
 
 
@@ -121,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://Daong.com/about/">
+  <link rel="canonical" href="https://Daong.com/2019/10/15/Go日志定制/">
 
 
 
 
 
-  <title> | 大东的博客</title>
+  <title>Go语言中基本的日志格式 | 大东的博客</title>
   
 
 
@@ -252,33 +253,171 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/10/15/Go日志定制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline"></h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h3 id="郭大东的博客"><a href="#郭大东的博客" class="headerlink" title="郭大东的博客"></a>郭大东的博客</h3>
+          <h1 class="post-title" itemprop="name headline">Go语言中基本的日志格式</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-15T10:09:00+08:00">
+                2019-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="Go语言日志的基本格式"><a href="#Go语言日志的基本格式" class="headerlink" title="Go语言日志的基本格式"></a>Go语言日志的基本格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;io/ioutil&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">	Trace.Println(&quot;这是Trac&quot;)</span><br><span class="line">	Info.Println(&quot;这是Info&quot;)</span><br><span class="line">	Warning.Println(&quot;这是Warning&quot;)</span><br><span class="line">	Error.Println(&quot;这是Error&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">	Trace 			*log.Logger // 记录所有的日志</span><br><span class="line">	Info  			*log.Logger // 记录重要的信息</span><br><span class="line">	Warning 		*log.Logger // 需要注意的信息</span><br><span class="line">	Error    		*log.Logger // 记录非常严重信息</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	file,err := os.OpenFile(&quot;./errors.txt&quot;,os.O_CREATE,0666)</span><br><span class="line">	if err!= nil&#123;</span><br><span class="line">		log.Fatalln(&quot;Failed to open error log&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	Trace = log.New(ioutil.Discard,&quot;Trace:&quot;,log.Ldate | log.Ltime | log.Lshortfile)  //ioutil.Discard 不输出，不写入，可以用于占位</span><br><span class="line">	Info = log.New(os.Stdout,&quot;Info:&quot;,log.Ldate | log.Ltime | log.Lshortfile) //os.Stdout  不记录日志仅仅作为标准输出</span><br><span class="line">	Warning = log.New(file,&quot;Warning:&quot;,log.Ldate | log.Ltime | log.Lshortfile) // file  会将日志写入file,并输出</span><br><span class="line">	Error = log.New(io.MultiWriter(file,os.Stdin),&quot;Error:&quot;,log.Ldate | log.Ltime | log.Lshortfile) //写入，不输出，可以更改os.std。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/日志/" rel="tag"># 日志</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/Mysql_optimization/" rel="next" title="Mysql数据库查询优化">
+                <i class="fa fa-chevron-left"></i> Mysql数据库查询优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/11/Go_Work/" rel="prev" title="Go语言中无缓冲通道实现并发池">
+                Go语言中无缓冲通道实现并发池 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -398,7 +537,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#郭大东的博客"><span class="nav-number">1.</span> <span class="nav-text">郭大东的博客</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Go语言日志的基本格式"><span class="nav-number">1.</span> <span class="nav-text">Go语言日志的基本格式</span></a></li></ol></div>
             
 
           </div>

@@ -264,6 +264,641 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/12/20/Rpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/20/Rpc/" itemprop="url">Go语言练习Rpc</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-20T10:09:00+08:00">
+                2019-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Rpc架构"><a href="#Rpc架构" class="headerlink" title="Rpc架构"></a>Rpc架构</h2><p><img src="/2019/12/20/Rpc/rpc.jpg" alt="rpc图片"></p>
+<p>Rpc就是从一台机器（客户端）上通过传递参数的方法远程调用另一台机器（或者另一个进程）的函数或者方法，统称服务，并且返回结果。</p>
+<p>Rpc的流程如上图：</p>
+<ol>
+<li><p>Client将需要请求的方法名，参数 发送给Client Stub(客户端存根)</p>
+</li>
+<li><p>Client Stub将 方法名，参数进行打包，解包。具体打包方式：例如 方法名为 hello,在包的头部记录下长度，然后将Hello 进行二进制打包。</p>
+</li>
+<li><p>Client Stub 将信息传给Network Service</p>
+</li>
+<li><p>Network Service 通过Socket 进行通信</p>
+</li>
+<li><p>Network Service 将二进制数据传给 Server stub</p>
+</li>
+<li><p>Server stub 主要作用 与 Client Stub 一样，将数据进行解包，打包。</p>
+</li>
+<li><p>Server stub 将转换好的数据传给Server。</p>
+</li>
+</ol>
+<p>首先实现一个最简单的Rpc，将Go语言中有标准包net/rpc，下面代码中没有设计client stub sever sub  以及网络通信的详细描述，RPC也希望屏蔽这些信息，开发人员只需要调用。</p>
+<p>Server 端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">//定义一个方法，必须满足RPC规则，方法只能有两个可序列化的参数,第二个参数是指针类型。</span><br><span class="line">func (h *HelloServer)Hello(request int,reply *string)error&#123;</span><br><span class="line">	*reply = fmt.Sprintf(&quot;Hello 方法: %d&quot;,request)</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">		// RegisterName 将对象类型中，所有满足RPC规则的方法进行注册。放在HelloServer下。</span><br><span class="line">		err := rpc.RegisterName(&quot;HelloServer&quot;, new(HelloServer))</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			//fmt.Println(err)</span><br><span class="line">			log.Fatal(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">			//fmt.Println(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		listener, err := net.Listen(&quot;tcp&quot;, &quot;127.0.0.1:1234&quot;)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			log.Fatal(&quot;accept error;接收错误&quot;)</span><br><span class="line">			//fmt.Println(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	for &#123;</span><br><span class="line">		fmt.Println(&quot;开始循环接收请求&quot;)</span><br><span class="line">		conn, err := listener.Accept()</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			fmt.Println(err)</span><br><span class="line">		&#125;		</span><br><span class="line">		rpc.ServeConn(conn)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Cilent 端 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">func main()  &#123;</span><br><span class="line">	// 拨号 输入协议名称，地址</span><br><span class="line">	client,err := rpc.Dial(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	var replay * string</span><br><span class="line">	var replayGoodMethods * string</span><br><span class="line">	// 定义的replay 用于接收服务端处理完的请求。Call方法用于发送请求，是同步的。</span><br><span class="line">	// client.Go可以异步的发送请求。</span><br><span class="line">	err = client.Call(&quot;HelloServer.Hello&quot;,123,&amp;replay)</span><br><span class="line">	err = client.Call(&quot;HelloServer.Good&quot;,&quot;Client 端Good方法&quot;,&amp;replayGoodMethods)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">		fmt.Println(&quot;Send remote method error&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(&quot;%#v\n&quot;, *replay)</span><br><span class="line">	fmt.Printf(&quot;%#v\n&quot;, *replayGoodMethods)</span><br><span class="line">	err = client.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基础的Client 与Server已经完成，在RPC开发中开发人员一般有三种角色，服务器RPC方法的开发人员，客户端调用RPC的人员，指定RPC客户端与服务器协议的人员。</p>
+<p>接下来讲HelloServer服务进行重构，进行接口封装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line"></span><br><span class="line">// 定义封装一个接口</span><br><span class="line">type HelloServerInterface interface &#123;</span><br><span class="line">	Hello(request int, reply *string) error</span><br><span class="line">	Good(request string, reply *string) error</span><br><span class="line">&#125;</span><br><span class="line">// 定义一个类</span><br><span class="line">type struct HelloService&#123;&#125;</span><br><span class="line"></span><br><span class="line">// 接口方法</span><br><span class="line">func RegisterHelloService(svc HelloServerInterface)&#123;</span><br><span class="line">	return rpc.RegisterName(HelloServerName,svc)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//必须满足RPC规则，方法只能有两个可序列化的参数,第二个参数是指针类型。</span><br><span class="line">func (h *HelloServer)Hello(request int,reply *string)error&#123;</span><br><span class="line">	*reply = fmt.Sprintf(&quot;Hello 方法: %d&quot;,request)</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (h *HelloServer)Good(request string,reply *string)error&#123;</span><br><span class="line">	*reply = &quot;Good 方法:&quot; + request</span><br><span class="line">	return nil</span><br></pre></td></tr></table></figure>
+
+<p>可以对Client端也进行一次封装,这样可以避免出现参数类型不匹配等低级错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line">type HelloServerClient struct &#123;</span><br><span class="line">	Client *rpc.Client</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func DialHelloService(network,address string)(*HelloServerClient,error)&#123;</span><br><span class="line">	c , err := rpc.Dial(network,address)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		return nil,err</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;HelloServerClient&#123;Client:c&#125;,nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Hello(request int,reply *string)error&#123;</span><br><span class="line">	return p.Client.Call(HelloServerName+&quot;.Hello&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Good(request string,reply *string)error&#123;</span><br><span class="line">	return p.Client.Call(HelloServerName+&quot;.Good&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">	client , err := DialHelloService(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	//client,err := rpc.Dial(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)封装在DialHelloService方法</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line">	var replay string</span><br><span class="line">	var replayGoodMethods string</span><br><span class="line">	err = (*client).Hello(1213, &amp;replay)</span><br><span class="line">	err = (*client).Good(&quot;Good方法&quot;,&amp;replayGoodMethods)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;%#v\n&quot;, replay)</span><br><span class="line">	fmt.Printf(&quot;%#v,\n&quot;, replayGoodMethods)</span><br><span class="line">	_ = client.Client.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/11/28/Context/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/28/Context/" itemprop="url">Go语言通过Context控制goroutine的退出</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-28T10:09:00+08:00">
+                2019-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Go-通过-Context控制goroutine-的退出"><a href="#Go-通过-Context控制goroutine-的退出" class="headerlink" title="Go 通过 Context控制goroutine 的退出"></a>Go 通过 Context控制goroutine 的退出</h2><p>下面的程序会无线循环，直到4秒后，主进程退出。那么如何优雅的控制子goroutine退出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	f()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func f ()&#123;</span><br><span class="line">	go g()</span><br><span class="line">	time.Sleep(time.Second * 4)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func g ()&#123;</span><br><span class="line">	for  &#123;</span><br><span class="line">		fmt.Println(&quot;急啊急啊急啊&quot;)</span><br><span class="line">		time.Sleep(time.Second * 2)</span><br><span class="line">	&#125;</span><br><span class="line">	//如何通知子goroutine退出</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用chan进行改进，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	f()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var wg sync.WaitGroup</span><br><span class="line">var ch = make(chan bool)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func f ()&#123;</span><br><span class="line">	wg.Add(1)</span><br><span class="line">	go g()</span><br><span class="line">	time.Sleep(time.Second * 2)</span><br><span class="line">	ch &lt;- true</span><br><span class="line">	wg.Wait()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func g ()&#123;</span><br><span class="line">	defer wg.Done()</span><br><span class="line">LOOP:</span><br><span class="line">	for  &#123;</span><br><span class="line">		fmt.Println(&quot;急啊急啊急啊&quot;)</span><br><span class="line">		time.Sleep(time.Second * 2)</span><br><span class="line">		select &#123;</span><br><span class="line">		case &lt;- ch: //当接收到一个chan跳出for循环，</span><br><span class="line">			break LOOP</span><br><span class="line">		default:</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	//如何通知子goroutine退出</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用Context版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	f()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func f ()&#123;</span><br><span class="line">	// 开启一个context,context.Background()为父节点。</span><br><span class="line">	// ctx 是个接口，ctx,Done()会返回一个chanel</span><br><span class="line">	// cancel是一个函数类型 用于关闭</span><br><span class="line">	ctx, cancel := context.WithCancel(context.Background())</span><br><span class="line">	wg.Add(1)</span><br><span class="line">	go g(ctx)</span><br><span class="line">	time.Sleep(time.Second * 4)</span><br><span class="line">	//ch &lt;- true</span><br><span class="line">	cancel()</span><br><span class="line">	wg.Wait()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func g (ctx context.Context)&#123;</span><br><span class="line">	defer wg.Done()</span><br><span class="line">LOOP:</span><br><span class="line">	for  &#123;</span><br><span class="line">		fmt.Println(&quot;等待退出&quot;)</span><br><span class="line">		time.Sleep(time.Second * 2)</span><br><span class="line">		select &#123;</span><br><span class="line">		case &lt;- ctx.Done(): //ctx.Done() 会返回一个chanel</span><br><span class="line">			break LOOP</span><br><span class="line">		default:</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	//如何通知子goroutine退出</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>context.Context</code>是一个接口，该接口定义了四个需要实现的方法。具体签名如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Context <span class="keyword">interface</span> &#123;</span><br><span class="line">    Deadline() (deadline time.Time, ok <span class="keyword">bool</span>)</span><br><span class="line">    Done() &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">    Err() error</span><br><span class="line">    Value(key <span class="keyword">interface</span>&#123;&#125;) <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Deadline 设置具体时间结束子进程</p>
+<p>Done  当决定子线程结束时，context.Done()可以得到一个空的chan</p>
+<p>Err  返回错误</p>
+<p>Value 方法会从<code>Context</code>中返回键对应的值，对于同一个上下文来说，多次调用<code>Value</code> 并传入相同的<code>Key</code>会返回相同的结果，该方法仅用于传递跨API和进程间跟请求域的数据；</p>
+<h4 id="一般以context-Background-实现一个跟节点，那么是如何衍生更多的子Context的呢？这就要靠context包为我们提供的With系列的函数了。"><a href="#一般以context-Background-实现一个跟节点，那么是如何衍生更多的子Context的呢？这就要靠context包为我们提供的With系列的函数了。" class="headerlink" title="一般以context.Background()实现一个跟节点，那么是如何衍生更多的子Context的呢？这就要靠context包为我们提供的With系列的函数了。"></a>一般以context.Background()实现一个跟节点，那么是如何衍生更多的子Context的呢？这就要靠context包为我们提供的With系列的函数了。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 返回的cancel 方法可以用于结束子goroutine，子goroutine中的context.DOne()会接收一个chan struct&#123;&#125;。</span><br><span class="line">func WithCancel(parent Context) (ctx Context, cancel CancelFunc)</span><br><span class="line"></span><br><span class="line">// 定一个具体时间，结束子goroutine，也可以手动结束，官方建议所有的最好手动关闭。</span><br><span class="line">func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) </span><br><span class="line"></span><br><span class="line">// 定多少事件后，结束子goroutine，也可以手动结束，官方建议所有的最好手动关闭。</span><br><span class="line">func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) </span><br><span class="line"></span><br><span class="line">// 用于传递一个值给子goroutine</span><br><span class="line">func WithValue(parent Context, key, val interface&#123;&#125;) Context</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/11/11/Go_Work/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/11/Go_Work/" itemprop="url">Go语言中无缓冲通道实现并发池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-11T10:09:00+08:00">
+                2019-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Go-语言并发，使用无缓冲通道构建并发池。"><a href="#Go-语言并发，使用无缓冲通道构建并发池。" class="headerlink" title="Go 语言并发，使用无缓冲通道构建并发池。"></a>Go 语言并发，使用无缓冲通道构建并发池。</h2><p>首先构建一个并发池，有两个字段一个是work  通道类型，一个是sync.WaitGroup。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type Pool struct &#123;   </span><br><span class="line">	work chan Worker   </span><br><span class="line">	wg sync.WaitGroup</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为工作并发池 提供一个接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Worker interface &#123;</span><br><span class="line">	Task()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着创建一个新的工作池，使用工厂函数来创建,返回值为Pool</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func New(maxGoroutines int) *Pool  &#123;</span><br><span class="line">	p := Pool&#123;</span><br><span class="line">		work : make(chan Worker),</span><br><span class="line">	&#125;</span><br><span class="line">	p.wg.Add(maxGorotuine) //往并发池添加并发的数量</span><br><span class="line">	for i:= 0 ; i &lt; maxGoroutines; i ++&#123;</span><br><span class="line">		go func() &#123;</span><br><span class="line">			for w := range p.work&#123;   // 这里会发生阻塞，在创建的时候，异步阻塞，返回一个池</span><br><span class="line">				w.Task()</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">		p.wg.Done()</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;p</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将工作提交到工作池</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (p *Pool)Run(w Worker)  &#123;</span><br><span class="line">	p.work &lt;- w</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关闭工作池</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func (p *Pool)Shutdown()&#123;   </span><br><span class="line">	close(p.work)   </span><br><span class="line">	p.wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来是对上面的使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var names = []string&#123;</span><br><span class="line">	&quot;steve&quot;,</span><br><span class="line">	&quot;bob&quot;,</span><br><span class="line">	&quot;mary&quot;,</span><br><span class="line">	&quot;therese&quot;,</span><br><span class="line">	&quot;jason&quot;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type namePrinter struct &#123;</span><br><span class="line">	name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *namePrinter)Task()  &#123;</span><br><span class="line">	fmt.Println(m.name)</span><br><span class="line">	time.Sleep(time.Second )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	p := New(10) //创建10个并发池子</span><br><span class="line">	var wg sync.WaitGroup</span><br><span class="line">	wg.Add(10 * len(names))</span><br><span class="line"></span><br><span class="line">	// time.Sleep(3 * time.Second)</span><br><span class="line"></span><br><span class="line">	for i :=0 ; i &lt; 10 ; i ++&#123;</span><br><span class="line">		for _ , name := range names&#123;</span><br><span class="line">			np := namePrinter&#123;</span><br><span class="line">				name : name,</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			go func() &#123;</span><br><span class="line">				p.Run(&amp;np)</span><br><span class="line">				wg.Done()</span><br><span class="line">			&#125;()</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait()</span><br><span class="line">	p.Shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/10/15/Go日志定制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/15/Go日志定制/" itemprop="url">Go语言中基本的日志格式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-15T10:09:00+08:00">
+                2019-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Go语言日志的基本格式"><a href="#Go语言日志的基本格式" class="headerlink" title="Go语言日志的基本格式"></a>Go语言日志的基本格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;io/ioutil&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">	Trace.Println(&quot;这是Trac&quot;)</span><br><span class="line">	Info.Println(&quot;这是Info&quot;)</span><br><span class="line">	Warning.Println(&quot;这是Warning&quot;)</span><br><span class="line">	Error.Println(&quot;这是Error&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">	Trace 			*log.Logger // 记录所有的日志</span><br><span class="line">	Info  			*log.Logger // 记录重要的信息</span><br><span class="line">	Warning 		*log.Logger // 需要注意的信息</span><br><span class="line">	Error    		*log.Logger // 记录非常严重信息</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	file,err := os.OpenFile(&quot;./errors.txt&quot;,os.O_CREATE,0666)</span><br><span class="line">	if err!= nil&#123;</span><br><span class="line">		log.Fatalln(&quot;Failed to open error log&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	Trace = log.New(ioutil.Discard,&quot;Trace:&quot;,log.Ldate | log.Ltime | log.Lshortfile)  //ioutil.Discard 不输出，不写入，可以用于占位</span><br><span class="line">	Info = log.New(os.Stdout,&quot;Info:&quot;,log.Ldate | log.Ltime | log.Lshortfile) //os.Stdout  不记录日志仅仅作为标准输出</span><br><span class="line">	Warning = log.New(file,&quot;Warning:&quot;,log.Ldate | log.Ltime | log.Lshortfile) // file  会将日志写入file,并输出</span><br><span class="line">	Error = log.New(io.MultiWriter(file,os.Stdin),&quot;Error:&quot;,log.Ldate | log.Ltime | log.Lshortfile) //写入，不输出，可以更改os.std。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/21/Mysql_optimization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1315,356 +1950,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/08/31/Docker_basic/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="东子">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="大东的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/31/Docker_basic/" itemprop="url">Docker基础命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-31T11:40:40+08:00">
-                2019-08-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
-                    <span itemprop="name">虚拟化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Docker基础命令总结"><a href="#Docker基础命令总结" class="headerlink" title="Docker基础命令总结"></a>Docker基础命令总结</h3><p><strong>搜索镜像</strong>: docker search &lt;image名称&gt;<br>可以列出仓库中所有的docker镜像，  isoffic代表是否官方</p>
-<p><strong>查看当前镜像</strong>: docker images / docker image ls             -a 显示所有镜像<br>两者相等。可以列出自己本地所有的镜像。如果查看镜像是否相同，只需要看 IMAGE ID  是否相同  </p>
-<p><strong>下载镜像</strong>: docker pull  Name[:版本号]<br>下载的镜像默认latest 最新版本</p>
-<p><strong>删除镜像</strong>：docker -rmi name[:版本号]  或者  Imageid</p>
-<p><strong>查看镜像/容器详细信息</strong>：docker inspect  镜像名/容器名  （ID也可以）</p>
-<p><strong>查看容器</strong>： docker ps （查看已经启动的） -a （查看所有的容器）</p>
-<p><strong>容器重命名</strong>：docker rename  容器名</p>
-<p><strong>创建并启动程序</strong>：<br>docker run – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           前台模式<br>docker run -d – name  容器名称    镜像名称    [命令]    相当于 docker create + docker start           后台模式 </p>
-<p><strong>启动容器参数详解</strong>：-d 参数后台运行 ，-t  容器启动是否进入终端，-i 容器启动是否提供输出功能 (例:如果没有-i,输入ls ,不会打印任何内容) 。建议自己尝试执行docker run -i / docker -t 查看区别。</p>
-<p><strong>容器暂停</strong>：  docker pause / unpause </p>
-<p><strong>重启容器</strong>：docker restart  容器名/容器id   新名字</p>
-<p><strong>查看容器日志</strong>：docker log  容器名</p>
-<p><strong>运行时操作</strong>：<br>docker attach [OPTIONS] CONTAINER    退出时，容器就关闭了  进入主进程<br>docker exec -it  container  命令     退出时 不会关闭容器  进入子进程，子进程不会进入log日志</p>
-<p><strong>停止容器</strong>：docker kill -9 直接杀死容器，docker stop  容器名  -t  2(默认10秒，-t可以设置停止时间)</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/08/25/first_blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="东子">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="大东的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/25/first_blog/" itemprop="url">耗时1天，搞定hexo。</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-25T11:40:40+08:00">
-                2019-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/其他/" itemprop="url" rel="index">
-                    <span itemprop="name">其他</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="详解Hexo，快速上手，从使用到部署。"><a href="#详解Hexo，快速上手，从使用到部署。" class="headerlink" title="详解Hexo，快速上手，从使用到部署。"></a>详解Hexo，快速上手，从使用到部署。</h3><hr>
-<p>[TOC]</p>
-<h3 id="第一步：准备基础工具"><a href="#第一步：准备基础工具" class="headerlink" title="第一步：准备基础工具"></a>第一步：准备基础工具</h3><ul>
-<li>安装Git：<a href="https://gitforwindows.org/" target="_blank" rel="noopener">Download git</a></li>
-<li>安装Node.js：<a href="https://nodejs.org/zh-cndownload/" target="_blank" rel="noopener">Download nodejs</a></li>
-<li>安装Hexo：<a href="https://hexo.io/zh-cn/docs/setup" target="_blank" rel="noopener">使用hexo</a><br><br>&emsp;&emsp;Hexo可以方便快捷的搭建起一个静态网站，这三个工具的安装已经非常成熟，如果遇到问题可以通过Google、百度解决</li>
-</ul>
-<h3 id="第二部：Hexo的基本使用"><a href="#第二部：Hexo的基本使用" class="headerlink" title="第二部：Hexo的基本使用"></a>第二部：Hexo的基本使用</h3><p>&emsp;&emsp;安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
-<pre><code>$ hexo init &lt;文件名&gt; 
-$ cd &lt;文件名&gt; 
-$ npm install 可能会遇到坑，每个人的环境都不一样，网上的解决方法很全。</code></pre><h3 id="第三步：新建完成后，指定文件夹的目录如下："><a href="#第三步：新建完成后，指定文件夹的目录如下：" class="headerlink" title="第三步：新建完成后，指定文件夹的目录如下："></a>第三步：新建完成后，指定文件夹的目录如下：</h3><pre><code>.
-├── _config.yml
-├── package.json
-├── scaffolds
-├── source
-|   ├── _drafts
-|   └── _posts
-└── themes</code></pre><p><strong>_config.yml</strong>：<br>网站的 配置 信息，您可以在此配置大部分的参数。</p>
-<p><strong>package.json</strong>：<br>应用程序的信息。EJS, Stylus 和 Markdown renderer 已默认安装，您可以自由移除。</p>
-<p><strong>scaffolds</strong>：<br>模版 文件夹。当您新建文章时，Hexo 会根据 scaffold 来建立文件。<br>Hexo的模板是指在新建的文章文件中默认填充的内容。例如，如果您修改scaffold/post.md中的Front-matter内容，那么每次新建一篇文章时都会包含这个修改。</p>
-<p><strong>source</strong>：<br>资源文件夹是存放用户资源的地方。除 _posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown 和 HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去。</p>
-<p><strong>themes</strong>：<br>主题 文件夹。Hexo 会根据主题来生成静态页面。    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过以上步骤就已经生成了静态网站，通过命令 hexo server 可以通过访问本地的链接进行查看。接下来可以通过 https://hexo.io/zh-cn/docs/commands 查看每个文件的具体信息。</span><br></pre></td></tr></table></figure>
-
-<h3 id="第四步：更换主题"><a href="#第四步：更换主题" class="headerlink" title="第四步：更换主题"></a>第四步：更换主题</h3><p>&emsp;&emsp;上面的链接已经可以解决大部分的问题，接下来就是更换自己喜欢的主题，如果想要更换主题，需要参考<br><a href="https://segmentfault.com/a/1190000012805627" target="_blank" rel="noopener">如何更换主题</a>。 更换主题的时候有要注意，Hexo的主题模板可以到github搜索。例如：<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">https://github.com/litten/hexo-theme-yilia</a> 这种的路径</p>
-<h3 id="第五步-为主题添加自己想要的按钮。"><a href="#第五步-为主题添加自己想要的按钮。" class="headerlink" title="第五步: 为主题添加自己想要的按钮。"></a>第五步: 为主题添加自己想要的按钮。</h3><p>​        更换了主题，发现新的主题没有归档、分类、标签、关于。想要添加这些可以通过 如下方法：<br>1：添加 关于页面<br>使用：hexo new page “about” 新建一个 关于页面。<br>主题的 _config.yml 文件中的 menu 中进行匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">home: /      //主页</span><br><span class="line">categories: /categories //分类</span><br><span class="line">archives: /archives   //归档</span><br><span class="line">tags: /tags   //标签</span><br><span class="line">about: /about   //关于                  （添加此行即可）</span><br><span class="line">编辑 about 关于页面 md文件 重新hexo g &amp; hexo s 就能看到</span><br></pre></td></tr></table></figure>
-
-<p>2：添加 标签页面<br>使用： hexo new page tags 新建一个 标签 页面。<br>主题的 _config.yml 文件中的 menu 中进行匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">home: /      //主页</span><br><span class="line">categories: /categories //分类</span><br><span class="line">archives: /archives   //归档</span><br><span class="line">tags: /tags   //标签                  （添加此行即可）</span><br><span class="line">about: /about   //关于</span><br><span class="line">底下的代码是在source/_post文件下的[文章名].md的最上面：</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: 标签测试</span><br><span class="line">tags:</span><br><span class="line">- Testing                   （这个就是文章的标签了）</span><br><span class="line">- Another Tag               （这个就是文章的标签了）</span><br></pre></td></tr></table></figure>
-
-<p>3：添加 分类页面<br>使用： hexo new page categories 新建一个 分类 页面。<br>主题的 _config.yml 文件中的 menu 中进行匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">home: /      //主页</span><br><span class="line">categories: /categories //分类        （添加此行即可）</span><br><span class="line">archives: /archives   //归档</span><br><span class="line">tags: /tags   //标签                  </span><br><span class="line">about: /about   //关于</span><br><span class="line">底下的代码是在source/_post文件下的[文章名].md的最上面：</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: 分类测试</span><br><span class="line">categories:</span><br><span class="line">- hexo                       （这个就是文章的分类了）</span><br></pre></td></tr></table></figure>
-
-<p>4：添加 归档页面<br>主题的 _config.yml 文件中的 menu 中进行匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">home: /      //主页</span><br><span class="line">categories: /categories //分类        </span><br><span class="line">archives: /archives   //归档             （添加此行即可）</span><br><span class="line">tags: /tags   //标签                  </span><br><span class="line">about: /about   //关于</span><br></pre></td></tr></table></figure>
-
-<p>5：添加 自定义页面<br>使用： hexo new page “guestbook” 新建一个 自定义 页面。<br>主题的 _config.yml 文件中的 menu 中进行匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">home: /      //主页</span><br><span class="line">categories: /categories //分类        </span><br><span class="line">archives: /archives   //归档   </span><br><span class="line">tags: /tags   //标签                  </span><br><span class="line">about: /about   //关于</span><br><span class="line">guestbook: /guestbook    //自定义             （添加此行即可）</span><br></pre></td></tr></table></figure>
-
-<p>添加了这些标签可以在主页面进行点击了，但是发现内容并不能显示，此时需要做如下操作：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">以下代码在blog\source\categories\index.md文件</span><br><span class="line">---</span><br><span class="line">title: 分类</span><br><span class="line">date: 2019-08-25 14:11:31</span><br><span class="line">layout: categories</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p>改完之后就OK了，注意：每个自己添加的按钮都需要添加（layout）。</p>
-<h3 id="第六步-：做出了满意的博客，接下来就是让大家看到，这一步讲部署到github"><a href="#第六步-：做出了满意的博客，接下来就是让大家看到，这一步讲部署到github" class="headerlink" title="第六步 ：做出了满意的博客，接下来就是让大家看到，这一步讲部署到github"></a>第六步 ：做出了满意的博客，接下来就是让大家看到，这一步讲部署到github</h3><p>&emsp;&emsp;首先建个仓库，配置好自己的私钥，然后打开 Hexo 博客主配置文件 _config.yml，找到 deploy 属性，作如下配置：<br>        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    type: git  </span><br><span class="line">    repository:</span><br><span class="line">github: git@github.com:xxxx/xxxx.github.io.git</span><br><span class="line">coding: git@git.coding.net:xxxx/xxxx.git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure></p>
-<p>执行命令：hexo clean &amp;&amp; hexo g &amp;&amp; hexo d<br>可以参考github部署<a href="https://segmentfault.com/a/1190000018250408" target="_blank" rel="noopener">详细教程</a></p>
-<h3 id="第八步：最后一步，绑定自己的域名。"><a href="#第八步：最后一步，绑定自己的域名。" class="headerlink" title="第八步：最后一步，绑定自己的域名。"></a>第八步：最后一步，绑定自己的域名。</h3><p>直接跟着这个链接配置即可。<a href="https://blog.csdn.net/Wonz5130/article/details/82828761" target="_blank" rel="noopener">https://blog.csdn.net/Wonz5130/article/details/82828761</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1708,7 +2000,7 @@ $ npm install 可能会遇到坑，每个人的环境都不一样，网上的解
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1719,7 +2011,7 @@ $ npm install 可能会遇到坑，每个人的环境都不一样，网上的解
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1730,7 +2022,7 @@ $ npm install 可能会遇到坑，每个人的环境都不一样，网上的解
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
