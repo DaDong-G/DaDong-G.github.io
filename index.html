@@ -361,19 +361,24 @@
 <p>Rpc就是从一台机器（客户端）上通过传递参数的方法远程调用另一台机器（或者另一个进程）的函数或者方法，统称服务，并且返回结果。</p>
 <p>Rpc的流程如上图：</p>
 <ol>
-<li><p>Client将需要请求的方法名，参数 发送给Client Stub(客户端存根)</p>
+<li><p>调用者（Caller, 也叫客户端、Client）以本地调用的方式发起调用；</p>
 </li>
-<li><p>Client Stub将 方法名，参数进行打包，解包。具体打包方式：例如 方法名为 hello,在包的头部记录下长度，然后将Hello 进行二进制打包。</p>
+<li><p>Client stub（客户端存根，可理解为辅助助手）收到调用后，负责将被调用的方法名、参数等打包编码成特定格式的能进行网络传输的消息体；</p>
 </li>
-<li><p>Client Stub 将信息传给Network Service</p>
+<li><p>Client stub将消息体通过网络发送给对端（服务端）</p>
 </li>
-<li><p>Network Service 通过Socket 进行通信</p>
+<li><p>Server stub（服务端存根，同样可理解为辅助助手）收到通过网络接收到消息后按照相应格式进行拆包解码，获取方法名和参数；</p>
 </li>
-<li><p>Network Service 将二进制数据传给 Server stub</p>
+<li><p>Server stub根据方法名和参数进行本地调用；</p>
 </li>
-<li><p>Server stub 主要作用 与 Client Stub 一样，将数据进行解包，打包。</p>
+<li><p>被调用者（Callee，也叫Server）本地调用执行后将结果返回给server stub;</p>
 </li>
-<li><p>Server stub 将转换好的数据传给Server。</p>
+<li><p>Server stub将返回值打包编码成消息，并通过网络发送给对端（客户端）；</p>
+</li>
+<li><p>Client stub收到消息后，进行拆包解码，返回给Client；</p>
+</li>
+<li><p>Client得到本次RPC调用的最终结果。</p>
+<p><strong>RPC的目标就是要2~8这些步骤都封装起来，让使用者对这些细节透明。</strong></p>
 </li>
 </ol>
 <p>首先实现一个最简单的Rpc，将Go语言中有标准包net/rpc，下面代码中没有设计client stub sever sub  以及网络通信的详细描述，RPC也希望屏蔽这些信息，开发人员只需要调用。</p>
