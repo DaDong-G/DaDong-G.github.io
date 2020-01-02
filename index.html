@@ -264,6 +264,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/12/25/Protobuf_Grpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/25/Protobuf_Grpc/" itemprop="url">protobuf与Grpc</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-25T10:09:00+08:00">
+                2019-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Grpc"><a href="#Grpc" class="headerlink" title="Grpc"></a>Grpc</h2><p>简介：</p>
+<ul>
+<li><p>gRPC是由Google公司开源的高性能RPC框架。</p>
+</li>
+<li><p>gRPC支持多语言</p>
+<p>gRPC原生使用C、Java、Go进行了三种实现，而C语言实现的版本进行封装后又支持C++、C#、Node、ObjC、 Python、Ruby、PHP等开发语言</p>
+</li>
+<li><p>gRPC支持多平台</p>
+<p>支持的平台包括：Linux、Android、iOS、MacOS、Windows</p>
+</li>
+<li><p>gRPC的消息协议使用Google自家开源的Protocol Buffers协议机制（proto3）</p>
+</li>
+<li><p>gRPC的传输使用HTTP/2标准，支持双向流和连接多路复用</p>
+</li>
+</ul>
+<p>gRPC的传输是基于HTTP/2标准协议实现的，gRPC支持双向流，实际就是HTTP/2的特性。而且gRPC有四种接口类型，也是依赖HTTP/2协议建立起来的，所以我们有必要先来了解一下HTTP/2协议。</p>
+<hr>
+<h2 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h2><p><code>Protobuf</code>是<code>Protocol Buffer</code>的简称，它是Google公司于2008年开源的一种高效的平台无关、语言无关、可扩展的数据格式，目前Protobuf作为接口规范的描述语言，可以作为Go语言RPC接口的基础工具。</p>
+<h3 id="编译器安装"><a href="#编译器安装" class="headerlink" title="编译器安装"></a>编译器安装</h3><h3 id="ptotoc"><a href="#ptotoc" class="headerlink" title="ptotoc"></a>ptotoc</h3><p><code>protobuf</code>协议编译器是用c++编写的，根据自己的操作系统下载对应版本的<code>protoc</code>编译器：<a href="https://github.com/protocolbuffers/protobuf/releases，解压后拷贝到`GOPATH/bin`目录下。" target="_blank" rel="noopener">https://github.com/protocolbuffers/protobuf/releases，解压后拷贝到`GOPATH/bin`目录下。</a></p>
+<h3 id="protoc-gen-go"><a href="#protoc-gen-go" class="headerlink" title="protoc-gen-go"></a>protoc-gen-go</h3><p>安装生成Go语言代码的工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/golang/protobuf/protoc-gen-go</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写IDL代码"><a href="#编写IDL代码" class="headerlink" title="编写IDL代码"></a>编写IDL代码</h3><p>在<code>protobuf_demo</code>目录下新建一个名为<code>demo.proto</code>的文件具体内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 如果不写默认为 proto2</span><br><span class="line">syntax =&quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">// 声明包</span><br><span class="line">package protobuf;</span><br><span class="line"></span><br><span class="line">// message 消息</span><br><span class="line">message RequestMessage&#123;</span><br><span class="line">    string value = 1;</span><br><span class="line">    string name = 2;</span><br><span class="line">    repeated string snippets = 3;</span><br><span class="line">    reserved &quot;foo&quot;, &quot;bar&quot;;</span><br><span class="line">    map&lt;string,string&gt; map_field = 4;</span><br><span class="line">    enum Corpus &#123;</span><br><span class="line">        UNIVERSAL = 0;</span><br><span class="line">        WEB = 1;</span><br><span class="line">        IMAGES = 2;</span><br><span class="line">        LOCAL = 3;</span><br><span class="line">        NEWS = 4;</span><br><span class="line">        PRODUCTS = 5;</span><br><span class="line">        VIDEO = 6;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ResponseMessage&#123;</span><br><span class="line">    string value = 1;</span><br><span class="line">    string name = 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 构成的服务</span><br><span class="line">service GoodServer &#123;</span><br><span class="line">    rpc SayGood (RequestMessage) returns(ResponseMessage)&#123;&#125;</span><br><span class="line">    // stream 字段 代表使用Grpc流的特性</span><br><span class="line">    rpc Chanel (stream RequestMessage) returns(stream ResponseMessage)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用命令 protoc –go_out=plugins=grpc:.  demo.proto    会生成对应的Go服务端与客户端的接口。</p>
+<p>生成的Server 接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type GoodServerServer interface &#123;</span><br><span class="line">	SayGood(context.Context, *RequestMessage) (*ResponseMessage, error)</span><br><span class="line">	// stream 字段 代表使用Grpc流的特性</span><br><span class="line">	Chanel(GoodServer_ChanelServer) error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生成的Client接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type GoodServerClient interface &#123;</span><br><span class="line">	SayGood(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (*ResponseMessage, error)</span><br><span class="line">	// stream 字段 代表使用Grpc流的特性</span><br><span class="line">	Chanel(ctx context.Context, opts ...grpc.CallOption) (GoodServer_ChanelClient, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>服务器 代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	. &quot;../protobuf&quot;</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;google.golang.org/grpc&quot;</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	// 新建一个 新的grpc server</span><br><span class="line">	grpcServer := grpc.NewServer()</span><br><span class="line">	RegisterGoodServerServer(grpcServer,&amp;GoodServerServerImpl&#123;&#125;)</span><br><span class="line">	listener,err := net.Listen(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		fmt.Println(&quot;错误的链接&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	err = grpcServer.Serve(listener)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type GoodServerServerImpl struct &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *GoodServerServerImpl)SayGood(ctx context.Context,args *RequestMessage) (*ResponseMessage, error) &#123;</span><br><span class="line">	fmt.Println(args.MapField)</span><br><span class="line">	fmt.Println(args.Snippets)</span><br><span class="line">	reply := &amp;ResponseMessage&#123;Value:&quot;值&quot;,Name:&quot;姓名&quot;&#125;</span><br><span class="line">	return reply,nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func  (m *GoodServerServerImpl)Chanel(stream GoodServer_ChanelServer)error&#123;</span><br><span class="line">	for   &#123;</span><br><span class="line">		// 循环接收参数</span><br><span class="line">		args,err :=stream.Recv()</span><br><span class="line">		if err!=nil&#123;</span><br><span class="line">			if err == io.EOF&#123;</span><br><span class="line">				fmt.Println(&quot;已经全部读取完毕&quot;)</span><br><span class="line">				return err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		reply := &amp;ResponseMessage&#123;Value:&quot;你好&quot;,Name:args.GetName()&#125;</span><br><span class="line">		err = stream.Send(reply)</span><br><span class="line">		if err != nil&#123;</span><br><span class="line">			return err</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	. &quot;../protobuf&quot;</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;google.golang.org/grpc&quot;</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	conn, err := grpc.Dial(&quot;127.0.0.1:1234&quot;, grpc.WithInsecure())</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Println(&quot;拨号错误&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	defer conn.Close()</span><br><span class="line">	client := NewGoodServerClient(conn)</span><br><span class="line">	stream , err := client.Chanel(context.Background())</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	request := &amp;RequestMessage&#123;</span><br><span class="line">		Snippets: []string&#123;&quot;1&quot;, &quot;2&quot;&#125;,</span><br><span class="line">		MapField: map[string]string&#123;&quot;key&quot;: &quot;value&quot;&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	reply, err := client.SayGood(context.Background(), request)</span><br><span class="line">	fmt.Println(reply.Value, reply.Name)</span><br><span class="line"></span><br><span class="line">	// 异步发送请求</span><br><span class="line">	go func() &#123;</span><br><span class="line">		for &#123;</span><br><span class="line">			if err := stream.Send(&amp;RequestMessage&#123;Value:&quot;1&quot;,Name:&quot;流式发送&quot;&#125;); err != nil&#123;</span><br><span class="line">				log.Fatal(err)</span><br><span class="line">			&#125;</span><br><span class="line">			fmt.Println(&quot;成功发送消息&quot;)</span><br><span class="line">			time.Sleep(time.Second * 2)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;()</span><br><span class="line">	// 异步接收请求</span><br><span class="line">	go func() &#123;</span><br><span class="line">		for &#123;</span><br><span class="line">			reply,err:= stream.Recv()</span><br><span class="line">			if err != nil&#123;</span><br><span class="line">				if err == io.EOF&#123;</span><br><span class="line">					break</span><br><span class="line">				&#125;</span><br><span class="line">				log.Fatal(err)</span><br><span class="line">			&#125;</span><br><span class="line">			fmt.Println(reply.Value,reply.Name)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	time.Sleep(time.Second * 6)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/12/20/Rpc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -361,24 +540,15 @@
 <p>Rpc就是从一台机器（客户端）上通过传递参数的方法远程调用另一台机器（或者另一个进程）的函数或者方法，统称服务，并且返回结果。</p>
 <p>Rpc的流程如上图：</p>
 <ol>
-<li><p>调用者（Caller, 也叫客户端、Client）以本地调用的方式发起调用；</p>
-</li>
-<li><p>Client stub（客户端存根，可理解为辅助助手）收到调用后，负责将被调用的方法名、参数等打包编码成特定格式的能进行网络传输的消息体；</p>
-</li>
-<li><p>Client stub将消息体通过网络发送给对端（服务端）</p>
-</li>
-<li><p>Server stub（服务端存根，同样可理解为辅助助手）收到通过网络接收到消息后按照相应格式进行拆包解码，获取方法名和参数；</p>
-</li>
-<li><p>Server stub根据方法名和参数进行本地调用；</p>
-</li>
-<li><p>被调用者（Callee，也叫Server）本地调用执行后将结果返回给server stub;</p>
-</li>
-<li><p>Server stub将返回值打包编码成消息，并通过网络发送给对端（客户端）；</p>
-</li>
-<li><p>Client stub收到消息后，进行拆包解码，返回给Client；</p>
-</li>
-<li><p>Client得到本次RPC调用的最终结果。</p>
-<p><strong>RPC的目标就是要2~8这些步骤都封装起来，让使用者对这些细节透明。</strong></p>
+<li><p>Client将需要请求的方法名，参数 发送给Client Stub(客户端存根)</p>
+<ol start="2">
+<li>Client Stub将 方法名，参数进行打包，解包。具体打包方式：例如 方法名为 hello,在包的头部记录下长度，然后将Hello 进行二进制打包。</li>
+<li>Client Stub 将信息传给Network Service</li>
+<li>Network Service 通过Socket 进行通信</li>
+<li>Network Service 将二进制数据传给 Server stub</li>
+<li>Server stub 主要作用 与 Client Stub 一样，将数据进行解包，打包。</li>
+<li>Server stub 将转换好的数据传给Server。</li>
+</ol>
 </li>
 </ol>
 <p>首先实现一个最简单的Rpc，将Go语言中有标准包net/rpc，下面代码中没有设计client stub sever sub  以及网络通信的详细描述，RPC也希望屏蔽这些信息，开发人员只需要调用。</p>
@@ -390,10 +560,10 @@
 
 <p>基础的Client 与Server已经完成，在RPC开发中开发人员一般有三种角色，服务器RPC方法的开发人员，客户端调用RPC的人员，指定RPC客户端与服务器协议的人员。</p>
 <p>接下来讲HelloServer服务进行重构，进行接口封装。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line"></span><br><span class="line">// 定义封装一个接口</span><br><span class="line">type HelloServerInterface interface &#123;</span><br><span class="line">	Hello(request int, reply *string) error</span><br><span class="line">	Good(request string, reply *string) error</span><br><span class="line">&#125;</span><br><span class="line">// 定义一个类</span><br><span class="line">type struct HelloService&#123;&#125;</span><br><span class="line"></span><br><span class="line">// 接口方法</span><br><span class="line">func RegisterHelloService(svc HelloServerInterface)&#123;</span><br><span class="line">	return rpc.RegisterName(HelloServerName,svc)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//必须满足RPC规则，方法只能有两个可序列化的参数,第二个参数是指针类型。</span><br><span class="line">func (h *HelloServer)Hello(request int,reply *string)error&#123;</span><br><span class="line">	*reply = fmt.Sprintf(&quot;Hello 方法: %d&quot;,request)</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (h *HelloServer)Good(request string,reply *string)error&#123;</span><br><span class="line">	*reply = &quot;Good 方法:&quot; + request</span><br><span class="line">	return nil</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line"></span><br><span class="line">// 定义封装一个接口</span><br><span class="line">type HelloServerInterface interface &#123;</span><br><span class="line">	Hello(request int, reply *string) error</span><br><span class="line">	Good(request string, reply *string) error</span><br><span class="line">&#125;</span><br><span class="line">// 定义一个类</span><br><span class="line">type struct HelloService&#123;&#125;</span><br><span class="line"></span><br><span class="line">// 接口方法</span><br><span class="line">func RegisterHelloService(svc HelloServerInterface)&#123;</span><br><span class="line">	return rpc.RegisterName(HelloServerName,svc)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//必须满足RPC规则，方法只能有两个可序列化的参数,第二个参数是指针类型。</span><br><span class="line">func (h *HelloServer)Hello(request int,reply *string)error&#123;</span><br><span class="line">	*reply = fmt.Sprintf(&quot;Hello 方法: %d&quot;,request)</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (h *HelloServer)Good(request string,reply *string)error&#123;</span><br><span class="line">	*reply = &quot;Good 方法:&quot; + request</span><br><span class="line">	return nil</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	// 任何一个满足了接口的类型，都可以传进去。</span><br><span class="line">	err := RegisterHelloService(&amp;HelloServer&#123;&#125;)</span><br><span class="line">	//err := rpc.RegisterName(&quot;HelloServer&quot;, new(HelloServer))</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//fmt.Println(err)</span><br><span class="line">		log.Fatal(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">		//fmt.Println(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	listener, err := net.Listen(&quot;tcp&quot;, &quot;127.0.0.1:1234&quot;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		log.Fatal(&quot;accept error;接收错误&quot;)</span><br><span class="line">		//fmt.Println(&quot;Rpc名称注册错误&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	for &#123;</span><br><span class="line">		fmt.Println(&quot;开始接收请求&quot;)</span><br><span class="line">		conn, err := listener.Accept()</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			fmt.Println(err)</span><br><span class="line">		&#125;</span><br><span class="line">		rpc.ServeConn(conn)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以对Client端也进行一次封装,这样可以避免出现参数类型不匹配等低级错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line">type HelloServerClient struct &#123;</span><br><span class="line">	Client *rpc.Client</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func DialHelloService(network,address string)(*HelloServerClient,error)&#123;</span><br><span class="line">	c , err := rpc.Dial(network,address)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		return nil,err</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;HelloServerClient&#123;Client:c&#125;,nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Hello(request int,reply *string)error&#123;</span><br><span class="line">	return p.Client.Call(HelloServerName+&quot;.Hello&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Good(request string,reply *string)error&#123;</span><br><span class="line">	return p.Client.Call(HelloServerName+&quot;.Good&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">	client , err := DialHelloService(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	//client,err := rpc.Dial(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)封装在DialHelloService方法</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line">	var replay string</span><br><span class="line">	var replayGoodMethods string</span><br><span class="line">	err = (*client).Hello(1213, &amp;replay)</span><br><span class="line">	err = (*client).Good(&quot;Good方法&quot;,&amp;replayGoodMethods)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;%#v\n&quot;, replay)</span><br><span class="line">	fmt.Printf(&quot;%#v,\n&quot;, replayGoodMethods)</span><br><span class="line">	_ = client.Client.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">const HelloServerName  = &quot;HelloService&quot;</span><br><span class="line">type HelloServerClient struct &#123;</span><br><span class="line">	Client *rpc.Client</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func DialHelloService(network,address string)(*HelloServerClient,error)&#123;</span><br><span class="line">	c , err := rpc.Dial(network,address)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		return nil,err</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;HelloServerClient&#123;Client:c&#125;,nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Hello(request int,reply *string)error&#123;</span><br><span class="line">	return p.Client.Call(HelloServerName+&quot;.Hello&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p HelloServerClient)Good(request string,reply *string)error&#123;</span><br><span class="line">	// 也可以用 Go 方法，实现异步。但我下面的写法实际上也是同步，将返回值适当的地方进行Done就是异步。</span><br><span class="line">	call := &lt;-p.Client.Go(HelloServerName+&quot;.Good&quot;, request, &amp;reply,nil).Done</span><br><span class="line">	return call.Error</span><br><span class="line">	//return p.Client.Call(HelloServerName+&quot;.Good&quot;, request, reply)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">	client , err := DialHelloService(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	//client,err := rpc.Dial(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)封装在DialHelloService方法</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line">	var replay string</span><br><span class="line">	var replayGoodMethods string</span><br><span class="line">	err = (*client).Hello(1213, &amp;replay)</span><br><span class="line">	err = (*client).Good(&quot;Good方法&quot;,&amp;replayGoodMethods)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;%#v\n&quot;, replay)</span><br><span class="line">	fmt.Printf(&quot;%#v,\n&quot;, replayGoodMethods)</span><br><span class="line">	_ = client.Client.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
           
@@ -1761,200 +1931,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/09/07/Docker_network/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="东子">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="大东的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/07/Docker_network/" itemprop="url">Docker基础之网络</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-07T14:40:40+08:00">
-                2019-09-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/虚拟化/" itemprop="url" rel="index">
-                    <span itemprop="name">虚拟化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h3><p>容器的网络默认与宿主机，其他容器都是相互隔离的。</p>
-<p><strong>查看docker已经创建的网络对象</strong>： docker network ls </p>
-<p><strong>查看网络详情</strong>：docker network inspect 网络名/id</p>
-<p><strong>创建网络</strong>：docker create -d bridge  name  -d 默认为bridge 。注意：host 网络与 null 网络只能存在一个。 </p>
-<p><strong>删除网络</strong>：docker network rm 网络名/id</p>
-<p><strong>使用网络</strong>：docker run  –network host -dti –name 容器名 镜像名</p>
-<p><strong>Docker网络类型</strong>：</p>
-<ol>
-<li><p>bridage</p>
-<ol>
-<li><p>宿主机需要有单独的bridage网卡，如docker 默认创建的docker0</p>
-</li>
-<li><p>外部无法直接访问容器，需要建立端口映射</p>
-</li>
-<li><p>每创建一个bridage网络，都会自动在宿主机上创建一个veth的网络。</p>
-</li>
-<li><p>每一个容器都有单独的ip。</p>
-</li>
-<li><p>容器直接无法直接通信，需要借助veth –&gt; docker0 这样进行通信。</p>
-</li>
-<li><p>宿主机上的veth 与 docker容器里面的 etho 是网络设备对。</p>
-</li>
-<li><p>bridage 网络的端口映射,将宿主机上面的某一端口，映射到容器的某一个端口。</p>
-</li>
-</ol>
-</li>
-</ol>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">将镜像中暴漏出来的端口，全部随机映射到宿主机:</span><br><span class="line">docker run -dti --name test_redis -P redis </span><br><span class="line">0.0.0.0:32768-&gt;6379/tcp</span><br><span class="line">镜像只有暴露了端口，才能使用。</span><br></pre></td></tr></table></figure>
-
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -dti --name test_redis -p 127.0.0.1:8000:6379 redis(本地ip 127.0.0.1,8000端口，映射到容器的6379端口)</span><br><span class="line">docker run -dti --name test_redis -p :8000:6379 redis  (本地8000端口映射，任意ip访问)</span><br><span class="line">docker run -dti --name test_redis -p ::6379 redis  (本地随机端口映射，任意ip访问)</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>Host网络</p>
-<ol>
-<li>容器完全共享宿主机的网络，没有任何网络隔离，宿主机的网络就是容器的网络</li>
-<li>容器、宿主机上所有的端口不能重复，即端口必须唯一</li>
-<li>外部可以直接访问容器，无需端口映射</li>
-<li>容器的ip就是宿主机的ip   </li>
-</ol>
-</li>
-<li><p>none 网络  </p>
-<ol>
-<li>容器上没有网络，也没有任何网络设备</li>
-<li>如果需要网络，需要用户自行安装与配置</li>
-<li>该模式适合需要高度制定网络的用户使用</li>
-</ol>
-</li>
-<li><p>Overlay 网络</p>
-<ol>
-<li>也称覆盖网络，主要用于实现跨主机容器间的通讯。</li>
-</ol>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2005,7 +1981,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2027,7 +2003,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -2071,7 +2047,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

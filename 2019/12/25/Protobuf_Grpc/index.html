@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="gRpc,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="大东的博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="Grpc简介：  gRPC是由Google公司开源的高性能RPC框架。  gRPC支持多语言 gRPC原生使用C、Java、Go进行了三种实现，而C语言实现的版本进行封装后又支持C++、C#、Node、ObjC、 Python、Ruby、PHP等开发语言  gRPC支持多平台 支持的平台包括：Linux、Android、iOS、MacOS、Windows  gRPC的消息协议使用Google自家开">
+<meta name="keywords" content="gRpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="protobuf与Grpc">
+<meta property="og:url" content="https://Daong.com/2019/12/25/Protobuf_Grpc/index.html">
+<meta property="og:site_name" content="大东的博客">
+<meta property="og:description" content="Grpc简介：  gRPC是由Google公司开源的高性能RPC框架。  gRPC支持多语言 gRPC原生使用C、Java、Go进行了三种实现，而C语言实现的版本进行封装后又支持C++、C#、Node、ObjC、 Python、Ruby、PHP等开发语言  gRPC支持多平台 支持的平台包括：Linux、Android、iOS、MacOS、Windows  gRPC的消息协议使用Google自家开">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-02T04:01:28.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="protobuf与Grpc">
+<meta name="twitter:description" content="Grpc简介：  gRPC是由Google公司开源的高性能RPC框架。  gRPC支持多语言 gRPC原生使用C、Java、Go进行了三种实现，而C语言实现的版本进行封装后又支持C++、C#、Node、ObjC、 Python、Ruby、PHP等开发语言  gRPC支持多平台 支持的平台包括：Linux、Android、iOS、MacOS、Windows  gRPC的消息协议使用Google自家开">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://Daong.com/2019/12/25/Protobuf_Grpc/">
+
+
+
+
+
+  <title>protobuf与Grpc | 大东的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">大东的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">东子的技术博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-主页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            主页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://Daong.com/2019/12/25/Protobuf_Grpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="东子">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大东的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">protobuf与Grpc</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-25T10:09:00+08:00">
+                2019-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go语言/" itemprop="url" rel="index">
+                    <span itemprop="name">Go语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Grpc"><a href="#Grpc" class="headerlink" title="Grpc"></a>Grpc</h2><p>简介：</p>
+<ul>
+<li><p>gRPC是由Google公司开源的高性能RPC框架。</p>
+</li>
+<li><p>gRPC支持多语言</p>
+<p>gRPC原生使用C、Java、Go进行了三种实现，而C语言实现的版本进行封装后又支持C++、C#、Node、ObjC、 Python、Ruby、PHP等开发语言</p>
+</li>
+<li><p>gRPC支持多平台</p>
+<p>支持的平台包括：Linux、Android、iOS、MacOS、Windows</p>
+</li>
+<li><p>gRPC的消息协议使用Google自家开源的Protocol Buffers协议机制（proto3）</p>
+</li>
+<li><p>gRPC的传输使用HTTP/2标准，支持双向流和连接多路复用</p>
+</li>
+</ul>
+<p>gRPC的传输是基于HTTP/2标准协议实现的，gRPC支持双向流，实际就是HTTP/2的特性。而且gRPC有四种接口类型，也是依赖HTTP/2协议建立起来的，所以我们有必要先来了解一下HTTP/2协议。</p>
+<hr>
+<h2 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h2><p><code>Protobuf</code>是<code>Protocol Buffer</code>的简称，它是Google公司于2008年开源的一种高效的平台无关、语言无关、可扩展的数据格式，目前Protobuf作为接口规范的描述语言，可以作为Go语言RPC接口的基础工具。</p>
+<h3 id="编译器安装"><a href="#编译器安装" class="headerlink" title="编译器安装"></a>编译器安装</h3><h3 id="ptotoc"><a href="#ptotoc" class="headerlink" title="ptotoc"></a>ptotoc</h3><p><code>protobuf</code>协议编译器是用c++编写的，根据自己的操作系统下载对应版本的<code>protoc</code>编译器：<a href="https://github.com/protocolbuffers/protobuf/releases，解压后拷贝到`GOPATH/bin`目录下。" target="_blank" rel="noopener">https://github.com/protocolbuffers/protobuf/releases，解压后拷贝到`GOPATH/bin`目录下。</a></p>
+<h3 id="protoc-gen-go"><a href="#protoc-gen-go" class="headerlink" title="protoc-gen-go"></a>protoc-gen-go</h3><p>安装生成Go语言代码的工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/golang/protobuf/protoc-gen-go</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写IDL代码"><a href="#编写IDL代码" class="headerlink" title="编写IDL代码"></a>编写IDL代码</h3><p>在<code>protobuf_demo</code>目录下新建一个名为<code>demo.proto</code>的文件具体内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 如果不写默认为 proto2</span><br><span class="line">syntax =&quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">// 声明包</span><br><span class="line">package protobuf;</span><br><span class="line"></span><br><span class="line">// message 消息</span><br><span class="line">message RequestMessage&#123;</span><br><span class="line">    string value = 1;</span><br><span class="line">    string name = 2;</span><br><span class="line">    repeated string snippets = 3;</span><br><span class="line">    reserved &quot;foo&quot;, &quot;bar&quot;;</span><br><span class="line">    map&lt;string,string&gt; map_field = 4;</span><br><span class="line">    enum Corpus &#123;</span><br><span class="line">        UNIVERSAL = 0;</span><br><span class="line">        WEB = 1;</span><br><span class="line">        IMAGES = 2;</span><br><span class="line">        LOCAL = 3;</span><br><span class="line">        NEWS = 4;</span><br><span class="line">        PRODUCTS = 5;</span><br><span class="line">        VIDEO = 6;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ResponseMessage&#123;</span><br><span class="line">    string value = 1;</span><br><span class="line">    string name = 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 构成的服务</span><br><span class="line">service GoodServer &#123;</span><br><span class="line">    rpc SayGood (RequestMessage) returns(ResponseMessage)&#123;&#125;</span><br><span class="line">    // stream 字段 代表使用Grpc流的特性</span><br><span class="line">    rpc Chanel (stream RequestMessage) returns(stream ResponseMessage)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用命令 protoc –go_out=plugins=grpc:.  demo.proto    会生成对应的Go服务端与客户端的接口。</p>
+<p>生成的Server 接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type GoodServerServer interface &#123;</span><br><span class="line">	SayGood(context.Context, *RequestMessage) (*ResponseMessage, error)</span><br><span class="line">	// stream 字段 代表使用Grpc流的特性</span><br><span class="line">	Chanel(GoodServer_ChanelServer) error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生成的Client接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type GoodServerClient interface &#123;</span><br><span class="line">	SayGood(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (*ResponseMessage, error)</span><br><span class="line">	// stream 字段 代表使用Grpc流的特性</span><br><span class="line">	Chanel(ctx context.Context, opts ...grpc.CallOption) (GoodServer_ChanelClient, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>服务器 代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	. &quot;../protobuf&quot;</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;google.golang.org/grpc&quot;</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	// 新建一个 新的grpc server</span><br><span class="line">	grpcServer := grpc.NewServer()</span><br><span class="line">	RegisterGoodServerServer(grpcServer,&amp;GoodServerServerImpl&#123;&#125;)</span><br><span class="line">	listener,err := net.Listen(&quot;tcp&quot;,&quot;127.0.0.1:1234&quot;)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		fmt.Println(&quot;错误的链接&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	err = grpcServer.Serve(listener)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type GoodServerServerImpl struct &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *GoodServerServerImpl)SayGood(ctx context.Context,args *RequestMessage) (*ResponseMessage, error) &#123;</span><br><span class="line">	fmt.Println(args.MapField)</span><br><span class="line">	fmt.Println(args.Snippets)</span><br><span class="line">	reply := &amp;ResponseMessage&#123;Value:&quot;值&quot;,Name:&quot;姓名&quot;&#125;</span><br><span class="line">	return reply,nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func  (m *GoodServerServerImpl)Chanel(stream GoodServer_ChanelServer)error&#123;</span><br><span class="line">	for   &#123;</span><br><span class="line">		// 循环接收参数</span><br><span class="line">		args,err :=stream.Recv()</span><br><span class="line">		if err!=nil&#123;</span><br><span class="line">			if err == io.EOF&#123;</span><br><span class="line">				fmt.Println(&quot;已经全部读取完毕&quot;)</span><br><span class="line">				return err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		reply := &amp;ResponseMessage&#123;Value:&quot;你好&quot;,Name:args.GetName()&#125;</span><br><span class="line">		err = stream.Send(reply)</span><br><span class="line">		if err != nil&#123;</span><br><span class="line">			return err</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	. &quot;../protobuf&quot;</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;google.golang.org/grpc&quot;</span><br><span class="line">	&quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;sync&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	conn, err := grpc.Dial(&quot;127.0.0.1:1234&quot;, grpc.WithInsecure())</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Println(&quot;拨号错误&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	defer conn.Close()</span><br><span class="line">	client := NewGoodServerClient(conn)</span><br><span class="line">	stream , err := client.Chanel(context.Background())</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	request := &amp;RequestMessage&#123;</span><br><span class="line">		Snippets: []string&#123;&quot;1&quot;, &quot;2&quot;&#125;,</span><br><span class="line">		MapField: map[string]string&#123;&quot;key&quot;: &quot;value&quot;&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	reply, err := client.SayGood(context.Background(), request)</span><br><span class="line">	fmt.Println(reply.Value, reply.Name)</span><br><span class="line"></span><br><span class="line">	// 异步发送请求</span><br><span class="line">	go func() &#123;</span><br><span class="line">		for &#123;</span><br><span class="line">			if err := stream.Send(&amp;RequestMessage&#123;Value:&quot;1&quot;,Name:&quot;流式发送&quot;&#125;); err != nil&#123;</span><br><span class="line">				log.Fatal(err)</span><br><span class="line">			&#125;</span><br><span class="line">			fmt.Println(&quot;成功发送消息&quot;)</span><br><span class="line">			time.Sleep(time.Second * 2)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;()</span><br><span class="line">	// 异步接收请求</span><br><span class="line">	go func() &#123;</span><br><span class="line">		for &#123;</span><br><span class="line">			reply,err:= stream.Recv()</span><br><span class="line">			if err != nil&#123;</span><br><span class="line">				if err == io.EOF&#123;</span><br><span class="line">					break</span><br><span class="line">				&#125;</span><br><span class="line">				log.Fatal(err)</span><br><span class="line">			&#125;</span><br><span class="line">			fmt.Println(reply.Value,reply.Name)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	time.Sleep(time.Second * 6)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/gRpc/" rel="tag"># gRpc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/20/Rpc/" rel="next" title="Go语言练习Rpc">
+                <i class="fa fa-chevron-left"></i> Go语言练习Rpc
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">东子</p>
+              <p class="site-description motion-element" itemprop="description">技术、python、go、运维</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Grpc"><span class="nav-number">1.</span> <span class="nav-text">Grpc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#protobuf"><span class="nav-number">2.</span> <span class="nav-text">protobuf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译器安装"><span class="nav-number">2.1.</span> <span class="nav-text">编译器安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ptotoc"><span class="nav-number">2.2.</span> <span class="nav-text">ptotoc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#protoc-gen-go"><span class="nav-number">2.3.</span> <span class="nav-text">protoc-gen-go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写IDL代码"><span class="nav-number">2.4.</span> <span class="nav-text">编写IDL代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">东子</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
